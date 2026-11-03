@@ -5,7 +5,10 @@ info:
 
 http:
   method: GET
-  url: http://localhost:5000/api/minerva-lib/auth/profile
+  url: "{{baseUrl}}/auth/profile"
+  headers:
+    - name: Authorization
+      value: "Bearer {{accessToken}}"
   auth: inherit
 
 settings:
