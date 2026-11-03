@@ -1,0 +1,7 @@
+name: Local
+variables:
+  - name: baseUrl
+    value: http://localhost:5000/api/v1
+  - secret: true
+    name: accessToken
+    value: ""

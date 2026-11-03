@@ -5,7 +5,7 @@ info:
 
 http:
   method: POST
-  url: http://localhost:5000/api/minerva-lib/auth/logout
+  url: "{{baseUrl}}/auth/logout"
   auth: inherit
 
 settings:

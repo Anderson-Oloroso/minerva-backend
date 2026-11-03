@@ -5,7 +5,7 @@ info:
 
 http:
   method: GET
-  url: http://localhost:5000/api/minerva-lib/authors
+  url: "{{baseUrl}}/authors"
   auth: inherit
 
 settings:

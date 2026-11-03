@@ -5,7 +5,7 @@ info:
 
 http:
   method: POST
-  url: http://localhost:5000/api/minerva-lib/auth/register
+  url: "{{baseUrl}}/auth/register"
   body:
     type: json
     data: |-

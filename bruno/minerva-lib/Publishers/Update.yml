@@ -5,7 +5,10 @@ info:
 
 http:
   method: PUT
-  url: http://localhost:5000/api/minerva-lib/publishers/2
+  url: "{{baseUrl}}/publishers/2"
+  headers:
+    - name: Authorization
+      value: "Bearer {{accessToken}}"
   body:
     type: json
     data: |-
