@@ -1,23 +1,30 @@
-export function logger(req, res, next) {
-    const startedAt = Date.now();
-    const url = req.originalUrl || req.url;
-    let logged = false;
+export class LoggerMiddleware {
+    static formatLog(timestamp, method, url, status, duration) {
+        return `${timestamp} - Method: ${method} Url: ${url} Status: ${status} Duration: ${duration} ms`;
+    }
 
-    const logRequest = (status) => {
-        if (logged) return;
-        logged = true;
+    static handle(req, res, next) {
+        const startedAt = Date.now();
+        const url = req.originalUrl || req.url;
+        let logged = false;
 
-        const timestamp = new Date().toISOString();
-        const duration = Date.now() - startedAt;
-        console.log(
-            `${timestamp} - Method: ${req.method} Url: ${url} Status: ${status} Duration: ${duration} ms`
-        );
-    };
+        const logRequest = (status) => {
+            if (logged) return;
+            logged = true;
 
-    res.once('finish', () => logRequest(res.statusCode));
-    res.once('close', () => {
-        if (!res.writableFinished) logRequest('aborted');
-    });
+            const timestamp = new Date().toISOString();
+            const duration = Date.now() - startedAt;
+            console.log(LoggerMiddleware.formatLog(timestamp, req.method, url, status, duration));
+        };
 
-    next();
+        res.once('finish', () => logRequest(res.statusCode));
+        res.once('close', () => {
+            if (!res.writableFinished) logRequest('aborted');
+        });
+
+        next();
+    }
 }
+
+export const logger = LoggerMiddleware.handle;
+export default LoggerMiddleware;
