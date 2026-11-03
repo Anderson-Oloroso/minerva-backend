@@ -1,18 +1,15 @@
+import { apiPrefix, serverPort } from './config/env.config.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import dotenv from 'dotenv';
 import app from './app.js';
 import Database from './config/database.config.js';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 export class Server {
     #app;
     #port;
     #serverInstance;
 
-    constructor(expressApp = app, port = process.env.PORT || 5000) {
+    constructor(expressApp = app, port = serverPort) {
         this.#app = expressApp;
         this.#port = port;
         this.#serverInstance = null;
@@ -39,7 +36,7 @@ export class Server {
     listen() {
         this.#serverInstance = this.#app.listen(this.#port, () => {
             console.log(`Servidor Minerva Lib corriendo en http://localhost:${this.#port}`);
-            console.log(`Health Check disponible en http://localhost:${this.#port}/api/minerva-lib/health`);
+            console.log(`Health Check disponible en http://localhost:${this.#port}${apiPrefix === '/' ? '' : apiPrefix}/health`);
         });
         return this.#serverInstance;
     }

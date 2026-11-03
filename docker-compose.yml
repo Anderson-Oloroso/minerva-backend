@@ -7,14 +7,15 @@ services:
       - .env
     environment:
       MYSQL_DATABASE: ${DB_NAME:-minerva_lib_db}
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-secretpassword}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-secretpassword}
     ports:
-      - "3307:${DB_PORT:-3306}"
+      - "${DB_PUBLISHED_PORT:-3307}:${DB_PORT:-3306}"
+    command: --port=${DB_PORT:-3306}
     volumes:
       - mysql_data:/var/lib/mysql
       - ./database:/docker-entrypoint-initdb.d/
     healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping --protocol=TCP -h 127.0.0.1 -uroot -p\"$${MYSQL_ROOT_PASSWORD}\" --silent"]
+      test: ["CMD-SHELL", "mysqladmin ping --protocol=TCP -h 127.0.0.1 --port=\"$${DB_PORT:-3306}\" -uroot -p\"$${MYSQL_ROOT_PASSWORD}\" --silent"]
       interval: 5s
       timeout: 5s
       retries: 20

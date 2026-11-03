@@ -1,13 +1,22 @@
+import passport from '../config/passport.js';
+
 export class AuthMiddleware {
     requireAuth = (req, res, next) => {
-        if (!req.session || !req.session?.user) {
-            return res.status(401).json({ error: 'Usuario no autenticado. --> Iniciar Sesión' });
-        }
-        next();
+        passport.authenticate('jwt', { session: false }, (err, user) => {
+            if (err) {
+                return next(err);
+            }
+            if (!user) {
+                return res.status(401).json({ error: 'Token no válido o no proporcionado.' });
+            }
+
+            req.user = user;
+            return next();
+        })(req, res, next);
     };
 
     requireAdmin = (req, res, next) => {
-        if (req.session?.user?.role !== 'admin') {
+        if (req.user?.role !== 'admin') {
             return res.status(403).json({ err: ' Acceso denegado, se requiere permisos de administrador' });
         }
         next();

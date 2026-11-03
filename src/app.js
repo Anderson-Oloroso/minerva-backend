@@ -1,9 +1,21 @@
+import './config/env.config.js';
 import express from 'express';
 import cors from 'cors';
-import cookieSession from 'cookie-session';
+import rateLimit from 'express-rate-limit';
 import { logger } from './utils/logger.js';
 import { errorHandler } from './middlewares/error.middleware.js';
+import passport from './config/passport.js';
 import apiRouter from './routes/index.js';
+import { apiPrefix } from './config/env.config.js';
+
+const corsOrigins = (process.env.CORS_ORIGIN || '')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
+const rateLimitWindowMs = Number(process.env.RATE_LIMIT_WINDOW_MS) || 900000;
+const rateLimitMaxRequests = Number(process.env.RATE_LIMIT_MAX_REQUESTS) || 100;
+const healthPath = apiPrefix === '/' ? '/health' : `${apiPrefix}/health`;
 
 export class App {
     constructor() {
@@ -15,18 +27,20 @@ export class App {
 
     initializeMiddlewares() {
         this.app.use(logger);
-        this.app.use(cors());
+        this.app.use(cors(corsOrigins.length > 0 ? { origin: corsOrigins } : {}));
         this.app.use(express.json());
-        this.app.use(cookieSession({
-            name: 'minerba-lib-session',
-            keys: ['Alondra_|-|_871'],
-            maxAge: 60 * 60 * 1000
+        this.app.use(rateLimit({
+            windowMs: rateLimitWindowMs,
+            limit: rateLimitMaxRequests,
+            standardHeaders: true,
+            legacyHeaders: false
         }));
+        this.app.use(passport.initialize());
     }
 
     initializeRoutes() {
         // Endpoint de verificación / Health Check
-        this.app.get('/api/minerva-lib/health', (req, res) => {
+        this.app.get(healthPath, (req, res) => {
             res.status(200).json({
                 status: 'ok',
                 message: 'Minerva Lib API funcionando correctamente',
@@ -34,7 +48,7 @@ export class App {
             });
         });
 
-        this.app.use('/api/minerva-lib', apiRouter);
+        this.app.use(apiPrefix, apiRouter);
     }
 
     initializeErrorHandling() {

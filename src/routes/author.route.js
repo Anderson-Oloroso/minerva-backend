@@ -20,8 +20,8 @@ authorRouter.get('/', authorController.getAll);
 authorRouter.get('/:id', authorIdParamValidator, validationMiddleware, authorController.getById);
 
 // Rutas de administración
-authorRouter.post('/', createAuthorValidator, validationMiddleware, authorController.create);
-authorRouter.put('/:id', authorIdParamValidator, updateAuthorValidator, validationMiddleware, authorController.update);
-authorRouter.delete('/:id', authorIdParamValidator, validationMiddleware, authorController.delete);
+authorRouter.post('/', authMiddleware.requireAuth, authMiddleware.requireAdmin, createAuthorValidator, validationMiddleware, authorController.create);
+authorRouter.put('/:id', authMiddleware.requireAuth, authMiddleware.requireAdmin, authorIdParamValidator, updateAuthorValidator, validationMiddleware, authorController.update);
+authorRouter.delete('/:id', authMiddleware.requireAuth, authMiddleware.requireAdmin, authorIdParamValidator, validationMiddleware, authorController.delete);
 
 export default authorRouter;
