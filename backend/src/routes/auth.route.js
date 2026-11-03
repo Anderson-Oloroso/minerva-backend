@@ -1,13 +1,38 @@
-import { Router } from "express";
-import { validationsLogin, validationsRegister } from "../dtos/auth.dto.js";
-import { managerValidationErrors } from "../middlewares/validate.middleware.js";
-import { getProfile, login, logout, register } from "../controllers/auth.controller.js";
+import { Router } from 'express';
+import { AuthDTO } from '../dtos/auth.dto.js';
+import { ValidationMiddleware } from '../middlewares/validate.middleware.js';
+import { AuthController } from '../controllers/auth.controller.js';
 
-const authRouter = Router();
+export class AuthRoutes {
+    constructor() {
+        this.router = Router();
+        this.initializeRoutes();
+    }
 
-authRouter.post('/register', validationsRegister, managerValidationErrors, register);
-authRouter.post('/login', validationsLogin, managerValidationErrors, login);
-authRouter.post('/logout', logout);
-authRouter.get('/profile', getProfile);
+    initializeRoutes() {
+        this.router.post(
+            '/register',
+            AuthDTO.registerRules,
+            ValidationMiddleware.handle,
+            AuthController.register
+        );
 
-export default authRouter;
+        this.router.post(
+            '/login',
+            AuthDTO.loginRules,
+            ValidationMiddleware.handle,
+            AuthController.login
+        );
+
+        this.router.post('/logout', AuthController.logout);
+
+        this.router.get('/profile', AuthController.getProfile);
+    }
+
+    getRouter() {
+        return this.router;
+    }
+}
+
+export const authRoutes = new AuthRoutes();
+export default authRoutes.router;
