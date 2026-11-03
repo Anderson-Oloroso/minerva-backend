@@ -1,6 +1,7 @@
 export class ErrorMiddleware {
     static handle(err, req, res, next) {
-        res.status(err.statusCode || 500).json({
+        const statusCode = err.statusCode || 500;
+        res.status(statusCode).json({
             mensaje: err.message || 'Error interno del servidor',
             errores: err.details || null
         });
