@@ -45,5 +45,3 @@ export class AuthorModel {
         return result.affectedRows > 0;
     }
 }
-
-export default AuthorModel;

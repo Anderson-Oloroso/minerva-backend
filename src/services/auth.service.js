@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import UserDTO from '../dtos/user.dto.js';
+import { UserDTO } from '../dtos/user.dto.js';
 
 export class AuthService {
     constructor(userModel) {
@@ -43,5 +43,3 @@ export class AuthService {
         return UserDTO.from(user);
     }
 }
-
-export default AuthService;

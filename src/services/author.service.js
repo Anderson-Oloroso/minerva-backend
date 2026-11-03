@@ -1,5 +1,5 @@
 import { NotFoundError } from '../utils/errors.js';
-import AuthorDTO from '../dtos/author.dto.js';
+import { AuthorDTO } from '../dtos/author.dto.js';
 
 export class AuthorService {
     constructor(authorModel) {
@@ -41,5 +41,3 @@ export class AuthorService {
         return true;
     }
 }
-
-export default AuthorService;

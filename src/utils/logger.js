@@ -27,4 +27,3 @@ export class Logger {
 }
 
 export const logger = Logger.middleware;
-export default Logger;

@@ -33,4 +33,3 @@ export class AuthMiddleware {
 
 export const requireAuth = AuthMiddleware.requireAuth;
 export const requireAdmin = AuthMiddleware.requireAdmin;
-export default AuthMiddleware;

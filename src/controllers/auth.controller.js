@@ -1,4 +1,4 @@
-import TokenService from '../services/token.service.js';
+import { TokenService } from '../services/token.service.js';
 
 export class AuthController {
     constructor(authService) {
@@ -71,5 +71,3 @@ export class AuthController {
         }
     }
 }
-
-export default AuthController;

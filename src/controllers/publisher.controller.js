@@ -83,5 +83,3 @@ export class PublisherController {
         }
     }
 }
-
-export default PublisherController;

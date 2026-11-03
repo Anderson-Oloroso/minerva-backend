@@ -9,4 +9,3 @@ export class ErrorMiddleware {
 }
 
 export const errorHandler = ErrorMiddleware.handle;
-export default ErrorMiddleware;

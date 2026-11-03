@@ -45,5 +45,3 @@ export class PublisherModel {
         return result.affectedRows > 0;
     }
 }
-
-export default PublisherModel;

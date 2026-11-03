@@ -17,5 +17,3 @@ export class ValidationMiddleware {
 }
 
 export const validationMiddleware = (req, res, next) => ValidationMiddleware.handle(req, res, next);
-export const managerValidationErrors = validationMiddleware;
-export default validationMiddleware;

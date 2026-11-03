@@ -35,5 +35,3 @@ export class UserModel {
         };
     }
 }
-
-export default UserModel;

@@ -14,6 +14,3 @@ export class AuthorDTO {
         return list.map(item => new AuthorDTO(item));
     }
 }
-
-export const createAuthorDTO = AuthorDTO;
-export default AuthorDTO;

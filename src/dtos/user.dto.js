@@ -11,6 +11,3 @@ export class UserDTO {
         return new UserDTO(data);
     }
 }
-
-export const AuthDTO = UserDTO;
-export default UserDTO;

@@ -42,4 +42,3 @@ export class Database {
 }
 
 export const Pool = Database.getPool();
-export default Database;

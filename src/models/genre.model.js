@@ -45,5 +45,3 @@ export class GenreModel {
         return result.affectedRows > 0;
     }
 }
-
-export default GenreModel;

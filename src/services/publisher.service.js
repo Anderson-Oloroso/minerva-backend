@@ -1,5 +1,5 @@
 import { NotFoundError } from '../utils/errors.js';
-import PublisherDTO from '../dtos/publisher.dto.js';
+import { PublisherDTO } from '../dtos/publisher.dto.js';
 
 export class PublisherService {
     constructor(publisherModel) {
@@ -41,5 +41,3 @@ export class PublisherService {
         return true;
     }
 }
-
-export default PublisherService;

@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import Database from '../config/database.config.js';
-import GenreModel from '../models/genre.model.js';
-import GenreService from '../services/genre.service.js';
-import GenreController from '../controllers/genre.controller.js';
-import AuthMiddleware from '../middlewares/auth.middleware.js';
+import { Database } from '../config/database.config.js';
+import { GenreModel } from '../models/genre.model.js';
+import { GenreService } from '../services/genre.service.js';
+import { GenreController } from '../controllers/genre.controller.js';
+import { AuthMiddleware } from '../middlewares/auth.middleware.js';
 import { validationMiddleware } from '../middlewares/validation.middleware.js';
 import { createGenreValidator, updateGenreValidator, genreIdParamValidator } from '../validators/genre.validator.js';
 
