@@ -1,27 +1,27 @@
-import Pool from "../config/database.js";
+import Database from '../config/database.js';
 
-export class AuthorService{
-    static async create(data){
+export class AuthorService {
+    static async create(data) {
         const query = 'INSERT INTO authors (name_author) VALUES (?)';
-        const [ result ] = await Pool.execute(query, [data.name_author]);
+        const [ result ] = await Database.execute(query, [data.name_author]);
 
-        return{
+        return {
             id: result.insertId,
             name: data.name_author
-        }
+        };
     }
 
-    static async list(){
+    static async list() {
         const query = 'SELECT id_author AS id, name_author AS name FROM authors ORDER BY id_author ASC';
-        const [ rows ] = await Pool.execute(query);
+        const [ rows ] = await Database.execute(query);
         return rows;
     }
 
-    static async update(data, id){
+    static async update(data, id) {
         const query = 'UPDATE authors SET name_author = IFNULL(?, name_author) WHERE id_author = ?';
-        const [ result ] = await Pool.execute(query, [data.name_author, id]);
+        const [ result ] = await Database.execute(query, [data.name_author, id]);
 
-        if(result.affectedRows === 0){
+        if (result.affectedRows === 0) {
             return null;
         }
 
@@ -31,14 +31,16 @@ export class AuthorService{
         };
     }
 
-    static async delete(id){
+    static async delete(id) {
         const query = 'DELETE FROM authors WHERE id_author = ?';
-        const [ result ] = await Pool.execute(query, [id]);
-        
-        if(result.affectedRows === 0){
+        const [ result ] = await Database.execute(query, [id]);
+
+        if (result.affectedRows === 0) {
             return null;
         }
 
         return result.affectedRows > 0;
     }
 }
+
+export default AuthorService;
