@@ -1,9 +1,15 @@
+import TokenService from '../services/token.service.js';
+
 export class AuthController {
     constructor(authService) {
         this.authService = authService;
+        this.register = this.register.bind(this);
+        this.login = this.login.bind(this);
+        this.logout = this.logout.bind(this);
+        this.getProfile = this.getProfile.bind(this);
     }
 
-    register = async (req, res, next) => {
+    async register(req, res, next) {
         try {
             const newUser = await this.authService.register(req.body);
             res.status(201).json({
@@ -14,9 +20,9 @@ export class AuthController {
         } catch (err) {
             next(err);
         }
-    };
+    }
 
-    login = async (req, res, next) => {
+    async login(req, res, next) {
         try {
             const { email, password } = req.body;
             const user = await this.authService.login(email, password);
@@ -28,47 +34,42 @@ export class AuthController {
                 });
             }
 
-            req.session.user = user;
+            const { accessToken, expiresIn } = TokenService.createAccessToken(user);
 
             res.status(200).json({
                 status: 'Success',
                 message: 'Inicio de sesión exitoso',
-                data: user
+                data: user,
+                accessToken,
+                tokenType: 'Bearer',
+                expiresIn
             });
         } catch (err) {
             next(err);
         }
-    };
+    }
 
-    logout = async (req, res, next) => {
+    async logout(req, res, next) {
         try {
-            req.session = null;
             res.status(200).json({
                 status: 'Success',
-                message: 'Sesión cerrada exitosamente'
+                message: 'Elimina el token de acceso del cliente para cerrar sesión.'
             });
         } catch (err) {
             next(err);
         }
-    };
+    }
 
-    getProfile = async (req, res, next) => {
+    async getProfile(req, res, next) {
         try {
-            if (!req.session || !req.session.user) {
-                return res.status(401).json({
-                    status: 'Fail',
-                    message: 'No hay sesión activa'
-                });
-            }
-
             res.status(200).json({
                 status: 'Success',
-                data: req.session.user
+                data: req.user
             });
         } catch (err) {
             next(err);
         }
-    };
+    }
 }
 
 export default AuthController;

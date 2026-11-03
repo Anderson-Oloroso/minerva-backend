@@ -1,9 +1,14 @@
 export class GenreController {
     constructor(genreService) {
         this.genreService = genreService;
+        this.getAll = this.getAll.bind(this);
+        this.getById = this.getById.bind(this);
+        this.create = this.create.bind(this);
+        this.update = this.update.bind(this);
+        this.delete = this.delete.bind(this);
     }
 
-    getAll = async (req, res, next) => {
+    async getAll(req, res, next) {
         try {
             const genres = await this.genreService.getAll();
             if (!genres || genres.length === 0) {
@@ -23,9 +28,9 @@ export class GenreController {
         } catch (err) {
             next(err);
         }
-    };
+    }
 
-    getById = async (req, res, next) => {
+    async getById(req, res, next) {
         try {
             const { id } = req.params;
             const genre = await this.genreService.getById(id);
@@ -36,9 +41,9 @@ export class GenreController {
         } catch (err) {
             next(err);
         }
-    };
+    }
 
-    create = async (req, res, next) => {
+    async create(req, res, next) {
         try {
             const newGenre = await this.genreService.create(req.body);
             res.status(201).json({
@@ -49,9 +54,9 @@ export class GenreController {
         } catch (err) {
             next(err);
         }
-    };
+    }
 
-    update = async (req, res, next) => {
+    async update(req, res, next) {
         try {
             const { id } = req.params;
             const updatedGenre = await this.genreService.update(id, req.body);
@@ -63,9 +68,9 @@ export class GenreController {
         } catch (err) {
             next(err);
         }
-    };
+    }
 
-    delete = async (req, res, next) => {
+    async delete(req, res, next) {
         try {
             const { id } = req.params;
             await this.genreService.delete(id);
@@ -76,7 +81,7 @@ export class GenreController {
         } catch (err) {
             next(err);
         }
-    };
+    }
 }
 
 export default GenreController;

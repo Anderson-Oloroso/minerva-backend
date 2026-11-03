@@ -1,9 +1,14 @@
 export class AuthorController {
     constructor(authorService) {
         this.authorService = authorService;
+        this.getAll = this.getAll.bind(this);
+        this.getById = this.getById.bind(this);
+        this.create = this.create.bind(this);
+        this.update = this.update.bind(this);
+        this.delete = this.delete.bind(this);
     }
 
-    getAll = async (req, res, next) => {
+    async getAll(req, res, next) {
         try {
             const authors = await this.authorService.getAll();
             res.status(200).json({
@@ -15,9 +20,9 @@ export class AuthorController {
         } catch (err) {
             next(err);
         }
-    };
+    }
 
-    getById = async (req, res, next) => {
+    async getById(req, res, next) {
         try {
             const { id } = req.params;
             const author = await this.authorService.getById(id);
@@ -28,9 +33,9 @@ export class AuthorController {
         } catch (err) {
             next(err);
         }
-    };
+    }
 
-    create = async (req, res, next) => {
+    async create(req, res, next) {
         try {
             const newAuthor = await this.authorService.create(req.body);
             res.status(201).json({
@@ -41,9 +46,9 @@ export class AuthorController {
         } catch (err) {
             next(err);
         }
-    };
+    }
 
-    update = async (req, res, next) => {
+    async update(req, res, next) {
         try {
             const { id } = req.params;
             const updatedAuthor = await this.authorService.update(id, req.body);
@@ -55,9 +60,9 @@ export class AuthorController {
         } catch (err) {
             next(err);
         }
-    };
+    }
 
-    delete = async (req, res, next) => {
+    async delete(req, res, next) {
         try {
             const { id } = req.params;
             await this.authorService.delete(id);
@@ -68,7 +73,7 @@ export class AuthorController {
         } catch (err) {
             next(err);
         }
-    };
+    }
 }
 
 export default AuthorController;
