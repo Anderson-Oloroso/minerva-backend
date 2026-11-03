@@ -1,38 +1,24 @@
 import { Router } from 'express';
-import { AuthDTO } from '../dtos/auth.dto.js';
-import { ValidationMiddleware } from '../middlewares/validate.middleware.js';
-import { AuthController } from '../controllers/auth.controller.js';
+import Database from '../config/db.config.js';
+import UserModel from '../models/user.model.js';
+import AuthService from '../services/auth.service.js';
+import AuthController from '../controllers/auth.controller.js';
+import { validationMiddleware } from '../middlewares/validation.middleware.js';
+import {
+    registerValidator,
+    loginValidator
+} from '../validators/auth.validator.js';
 
-export class AuthRoutes {
-    constructor() {
-        this.router = Router();
-        this.initializeRoutes();
-    }
+// Ensamblaje / Inyección de dependencias
+const userModel = new UserModel(Database.getPool());
+const authService = new AuthService(userModel);
+const authController = new AuthController(authService);
 
-    initializeRoutes() {
-        this.router.post(
-            '/register',
-            AuthDTO.registerRules,
-            ValidationMiddleware.handle,
-            AuthController.register
-        );
+const authRouter = Router();
 
-        this.router.post(
-            '/login',
-            AuthDTO.loginRules,
-            ValidationMiddleware.handle,
-            AuthController.login
-        );
+authRouter.post('/register', registerValidator, validationMiddleware, authController.register);
+authRouter.post('/login', loginValidator, validationMiddleware, authController.login);
+authRouter.post('/logout', authController.logout);
+authRouter.get('/profile', authController.getProfile);
 
-        this.router.post('/logout', AuthController.logout);
-
-        this.router.get('/profile', AuthController.getProfile);
-    }
-
-    getRouter() {
-        return this.router;
-    }
-}
-
-export const authRoutes = new AuthRoutes();
-export default authRoutes.router;
+export default authRouter;

@@ -1,26 +1,14 @@
 import { Router } from 'express';
-import authorsRouter from './authors.route.js';
+import authorRouter from './author.route.js';
+import publisherRouter from './publisher.route.js';
+import genreRouter from './genre.route.js';
 import authRouter from './auth.route.js';
-import publishersRoute from './publishers.route.js';
-import genresRouter from './genres.route.js';
 
-export class ApiRouter {
-    constructor() {
-        this.router = Router();
-        this.initializeRoutes();
-    }
+const apiRouter = Router();
 
-    initializeRoutes() {
-        this.router.use('/authors', authorsRouter);
-        this.router.use('/auth', authRouter);
-        this.router.use('/publishers', publishersRoute);
-        this.router.use('/genres', genresRouter);
-    }
+apiRouter.use('/authors', authorRouter);
+apiRouter.use('/publishers', publisherRouter);
+apiRouter.use('/genres', genreRouter);
+apiRouter.use('/auth', authRouter);
 
-    getRouter() {
-        return this.router;
-    }
-}
-
-export const apiRouter = new ApiRouter();
-export default apiRouter.router;
+export default apiRouter;
