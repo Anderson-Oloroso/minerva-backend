@@ -26,14 +26,8 @@ export class PublisherModel {
 
     async update(id, data) {
         const query = 'UPDATE publishers SET name_publisher = IFNULL(?, name_publisher) WHERE id_publisher = ?';
-        const [ result ] = await this.pool.execute(query, [data.publisher, id]);
-        if (result.affectedRows === 0) {
-            return null;
-        }
-        return {
-            id: Number(id),
-            publisher: data.publisher === null ? '[AVISO]: Editorial no modificada' : data.publisher
-        };
+        await this.pool.execute(query, [data.publisher, id]);
+        return this.findById(id);
     }
 
     async delete(id) {

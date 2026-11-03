@@ -26,14 +26,8 @@ export class AuthorModel {
 
     async update(id, data) {
         const query = 'UPDATE authors SET name_author = IFNULL(?, name_author) WHERE id_author = ?';
-        const [ result ] = await this.pool.execute(query, [data.name_author, id]);
-        if (result.affectedRows === 0) {
-            return null;
-        }
-        return {
-            id: Number(id),
-            name: data.name_author === null ? '[AVISO]: Autor no modificado' : data.name_author
-        };
+        await this.pool.execute(query, [data.name_author, id]);
+        return this.findById(id);
     }
 
     async delete(id) {
