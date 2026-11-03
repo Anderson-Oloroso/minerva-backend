@@ -12,7 +12,7 @@ services:
       - "3307:${DB_PORT:-3306}"
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./database/script/:/docker-entrypoint-initdb.d/
+      - ./database:/docker-entrypoint-initdb.d/
     healthcheck:
       test: ["CMD-SHELL", "mysqladmin ping --protocol=TCP -h 127.0.0.1 -uroot -p\"$${MYSQL_ROOT_PASSWORD}\" --silent"]
       interval: 5s
@@ -21,7 +21,7 @@ services:
       start_period: 30s
 
   backend:
-    build: ./backend
+    build: .
     container_name: minerva_backend
     restart: always
     ports:
@@ -32,7 +32,7 @@ services:
       db:
         condition: service_healthy
     volumes:
-      - ./backend:/usr/src/app
+      - .:/usr/src/app
       - /usr/src/app/node_modules
 
 volumes:

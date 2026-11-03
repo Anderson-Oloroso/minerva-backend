@@ -5,7 +5,8 @@ import app from './app.js';
 import Database from './config/database.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+// Carga el .env centralizado desde la raíz del proyecto
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 export class Server {
     #app;
