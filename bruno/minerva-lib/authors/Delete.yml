@@ -5,7 +5,10 @@ info:
 
 http:
   method: DELETE
-  url: http://localhost:5000/api/minerva-lib/authors/7
+  url: "{{baseUrl}}/authors/7"
+  headers:
+    - name: Authorization
+      value: "Bearer {{accessToken}}"
   auth: inherit
 
 settings:

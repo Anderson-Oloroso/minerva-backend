@@ -5,7 +5,10 @@ info:
 
 http:
   method: POST
-  url: http://localhost:5000/api/minerva-lib/authors
+  url: "{{baseUrl}}/authors"
+  headers:
+    - name: Authorization
+      value: "Bearer {{accessToken}}"
   body:
     type: json
     data: |-
