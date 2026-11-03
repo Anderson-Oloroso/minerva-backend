@@ -1,10 +1,5 @@
 import { createPool } from 'mysql2/promise';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import dotenv from 'dotenv';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+import './env.config.js';
 
 export class Database {
     static #pool = null;
@@ -13,12 +8,12 @@ export class Database {
         if (!Database.#pool) {
             Database.#pool = createPool({
                 host: process.env.DB_HOST || 'db',
-                port: process.env.DB_PORT || 3306,
+                port: Number(process.env.DB_PORT) || 3306,
                 user: process.env.DB_USER || 'root',
                 password: process.env.DB_PASSWORD || 'secretpassword',
                 database: process.env.DB_NAME || 'minerva_lib_db',
                 waitForConnections: true,
-                connectionLimit: 10
+                connectionLimit: Number(process.env.DB_CONNECTION_LIMIT) || 10
             });
         }
         return Database.#pool;
