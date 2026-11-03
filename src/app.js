@@ -1,8 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import cookieSession from 'cookie-session';
-import { LoggerMiddleware } from './middlewares/logger.js';
-import { ErrorMiddleware } from './middlewares/error.middleware.js';
+import { logger } from './utils/logger.js';
+import { errorHandler } from './middlewares/error.middleware.js';
 import apiRouter from './routes/index.js';
 
 export class App {
@@ -14,13 +14,13 @@ export class App {
     }
 
     initializeMiddlewares() {
-        this.app.use(LoggerMiddleware.handle);
+        this.app.use(logger);
         this.app.use(cors());
         this.app.use(express.json());
         this.app.use(cookieSession({
-            name: 'minerba-lib-session', // Nombre de la cookiesession
-            keys: ['Alondra_|-|_871'],   // Firma que valida la sesion
-            maxAge: 60 * 60 * 1000        // Duracion 1h
+            name: 'minerba-lib-session',
+            keys: ['Alondra_|-|_871'],
+            maxAge: 60 * 60 * 1000
         }));
     }
 
@@ -34,11 +34,11 @@ export class App {
             });
         });
 
-        this.app.use('/api/minerva-lib', apiRouter); // Rutas que vienen desde index.js
+        this.app.use('/api/minerva-lib', apiRouter);
     }
 
     initializeErrorHandling() {
-        this.app.use(ErrorMiddleware.handle); // Capturador de errores
+        this.app.use(errorHandler);
     }
 
     getApp() {
