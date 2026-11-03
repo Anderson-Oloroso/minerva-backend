@@ -1,15 +1,50 @@
-import { Router } from "express";
-import { validationsCreatePublisher, validatePublisherId } from "../dtos/publishers.dto.js";
-import { requireAdmin, requireAuth } from "../middlewares/auth.middleware.js";
-import { managerValidationErrors } from "../middlewares/validate.middleware.js";
-import { createPublisher, deletePublisher, listPublishers, updatePublisher } from "../controllers/publishers.contrioller.js";
+import { Router } from 'express';
+import { PublisherDTO } from '../dtos/publishers.dto.js';
+import { AuthMiddleware } from '../middlewares/auth.middleware.js';
+import { ValidationMiddleware } from '../middlewares/validate.middleware.js';
+import { PublisherController } from '../controllers/publishers.controller.js';
 
-const publishersRoute = Router()
+export class PublisherRoutes {
+    constructor() {
+        this.router = Router();
+        this.initializeRoutes();
+    }
 
-// Modulo de creacion de editoriales
-publishersRoute.post('/', requireAuth, requireAdmin, validationsCreatePublisher, managerValidationErrors, createPublisher);
-publishersRoute.get('/', listPublishers);
-publishersRoute.put('/:id', requireAuth, requireAdmin, validatePublisherId, managerValidationErrors, updatePublisher);
-publishersRoute.delete('/:id', requireAuth, requireAdmin, validatePublisherId, managerValidationErrors, deletePublisher);
+    initializeRoutes() {
+        this.router.get('/', PublisherController.list);
 
-export default publishersRoute;
+        this.router.post(
+            '/',
+            AuthMiddleware.requireAuth,
+            AuthMiddleware.requireAdmin,
+            PublisherDTO.createRules,
+            ValidationMiddleware.handle,
+            PublisherController.create
+        );
+
+        this.router.put(
+            '/:id',
+            AuthMiddleware.requireAuth,
+            AuthMiddleware.requireAdmin,
+            PublisherDTO.idRules,
+            ValidationMiddleware.handle,
+            PublisherController.update
+        );
+
+        this.router.delete(
+            '/:id',
+            AuthMiddleware.requireAuth,
+            AuthMiddleware.requireAdmin,
+            PublisherDTO.idRules,
+            ValidationMiddleware.handle,
+            PublisherController.delete
+        );
+    }
+
+    getRouter() {
+        return this.router;
+    }
+}
+
+export const publisherRoutes = new PublisherRoutes();
+export default publisherRoutes.router;
