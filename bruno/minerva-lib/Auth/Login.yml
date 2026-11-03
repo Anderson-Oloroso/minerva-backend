@@ -21,3 +21,14 @@ settings:
   followRedirects: true
   maxRedirects: 5
   forwardAuthorizationHeader: false
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        const body = res.getBody();
+        if (res.status === 200 && body?.accessToken) {
+          bru.setEnvVar("accessToken", body.accessToken);
+        } else {
+          bru.setEnvVar("accessToken", "");
+        }

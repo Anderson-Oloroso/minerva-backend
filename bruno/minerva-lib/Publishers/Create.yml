@@ -6,9 +6,6 @@ info:
 http:
   method: POST
   url: "{{baseUrl}}/publishers"
-  headers:
-    - name: Authorization
-      value: "Bearer {{accessToken}}"
   body:
     type: json
     data: |-

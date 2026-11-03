@@ -6,9 +6,6 @@ info:
 http:
   method: PUT
   url: "{{baseUrl}}/authors/7"
-  headers:
-    - name: Authorization
-      value: "Bearer {{accessToken}}"
   body:
     type: json
     data: |-
