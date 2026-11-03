@@ -1,51 +1,46 @@
-import Database from '../config/database.js';
 import bcrypt from 'bcrypt';
+import UserDTO from '../dtos/user.dto.js';
 
 export class AuthService {
-    static async register(data) {
-        const salt = 10;
-        const hashedPssw = await bcrypt.hash(data.password, salt);
-        const query = 'INSERT INTO clients (dpi, name_client, last_name, phone, email, password, role) VALUES(?, ?, ?, ?, ?, ?, ?)';
-        const defaultRole = 'client';
-
-        const [ result ] = await Database.execute(query, [
-            data.doc,
-            data.name,
-            data.last_name,
-            data.phone,
-            data.email,
-            hashedPssw,
-            defaultRole
-        ]);
-
-        return {
-            id: result.insertId,
-            name: `${data.name} ${data.last_name}`,
-            email: data.email,
-            role: defaultRole
-        };
+    constructor(userModel) {
+        this.userModel = userModel;
     }
 
-    static async login(email, password) {
-        const query = 'SELECT id_client, name_client, email, password, role FROM clients WHERE email = ?';
-        const [ row ] = await Database.execute(query, [email]);
-        if (row.length === 0) {
+    async register(data) {
+        const salt = 10;
+        const hashedPssw = await bcrypt.hash(data.password, salt);
+        const defaultRole = 'client';
+
+        const user = await this.userModel.create({
+            doc: data.dpi,
+            name: data.name,
+            last_name: data.last_name,
+            phone: data.phone,
+            email: data.email,
+            password: hashedPssw,
+            role: defaultRole
+        });
+
+        return UserDTO.from(user);
+    }
+
+    async login(email, password) {
+        const user = await this.userModel.findByEmail(email);
+        if (!user) {
             return null;
         }
 
-        const client = row[0];
-        const isValid = await bcrypt.compare(password, client.password);
-
+        const isValid = await bcrypt.compare(password, user.password);
         if (!isValid) {
-            return null; // Contraseña incorrecta
+            return null;
         }
 
-        return {
-            id: client.id_client,
-            name: client.name_client,
-            email: client.email,
-            role: client.role
-        };
+        return UserDTO.from(user);
+    }
+
+    async getProfile(userId) {
+        const user = await this.userModel.findById(userId);
+        return UserDTO.from(user);
     }
 }
 
