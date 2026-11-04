@@ -1,4 +1,5 @@
-import { apiPrefix, serverPort } from './config/env.config.js';
+import { serverPort } from './config/env.config.js';
+import { apiPrefix } from './config/version.config.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import app from './app.js';

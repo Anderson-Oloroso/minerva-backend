@@ -6,7 +6,7 @@ import { logger } from './utils/logger.js';
 import { errorHandler } from './middlewares/error.middleware.js';
 import passport from './config/passport.js';
 import apiRouter from './routes/index.js';
-import { apiPrefix } from './config/env.config.js';
+import { apiPrefix } from './config/version.config.js';
 
 const corsOrigins = (process.env.CORS_ORIGIN || '')
     .split(',')
