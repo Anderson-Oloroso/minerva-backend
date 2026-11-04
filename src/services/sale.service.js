@@ -5,6 +5,10 @@ export class SaleService {
         this.saleModel = saleModel;
     }
 
+    async getAll() {
+        return SaleDTO.fromList(await this.saleModel.findAll());
+    }
+
     async getMine(idUser) {
         return SaleDTO.fromList(await this.saleModel.findAllByUserId(idUser));
     }
@@ -15,5 +19,13 @@ export class SaleService {
             details: data.details
         });
         return SaleDTO.from(sale);
+    }
+
+    async confirm(id) {
+        return SaleDTO.from(await this.saleModel.confirm(id));
+    }
+
+    async reject(id) {
+        return SaleDTO.from(await this.saleModel.reject(id));
     }
 }
