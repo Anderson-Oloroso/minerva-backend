@@ -189,12 +189,12 @@ INSERT INTO loan_details (id_loan_detail, id_loan, id_book, state_book_out, stat
 (6, 6, 15, 'Excelente', NULL);
 
 -- 8. Insertar Ventas (Múltiples transacciones de compra de libros por varios usuarios)
-INSERT INTO sales (id_sale, id_user, date_sale, total) VALUES
-(1, 3, '2026-10-01 11:00:00', 110.00),
-(2, 4, '2026-10-12 16:45:00', 270.00),
-(3, 5, '2026-10-25 12:30:00', 180.00),
-(4, 9, '2026-10-26 14:10:00', 215.00),
-(5, 10, '2026-10-27 09:30:00', 125.50);
+INSERT INTO sales (id_sale, id_user, date_sale, total, state_sale) VALUES
+(1, 3, '2026-10-01 11:00:00', 110.00, 'confirmada'),
+(2, 4, '2026-10-12 16:45:00', 270.00, 'confirmada'),
+(3, 5, '2026-10-25 12:30:00', 180.00, 'confirmada'),
+(4, 9, '2026-10-26 14:10:00', 215.00, 'confirmada'),
+(5, 10, '2026-10-27 09:30:00', 125.50, 'confirmada');
 
 -- 9. Detalles de la Venta (Asociados correctamente a las ventas y libros)
 INSERT INTO sale_details (id_sale_details, id_sale, id_book, amount, unit_price) VALUES 

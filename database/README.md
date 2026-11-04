@@ -13,9 +13,9 @@ La base de datos `minerva_lib_db` gestiona el catálogo de libros, usuarios, pr�
 | `genres` | `id_genre` INT PK; `name_genre` VARCHAR(50). |
 | `books` | `id_book` INT PK; `title` VARCHAR(50); `isbn` VARCHAR(20); `image_url` VARCHAR(2048) NULL; `year_publication` SMALLINT UNSIGNED; `no_pages` INT; `wrote_language` VARCHAR(50); `price` DECIMAL(6,2); `stock` INT; `id_author` INT FK NULL; `id_publisher` INT FK NULL; `id_genre` INT FK. |
 | `users` | `id_user` INT PK; `dpi` VARCHAR(13); `name_user` VARCHAR(50); `last_name` VARCHAR(50); `phone` VARCHAR(8); `email` VARCHAR(255) UNIQUE; `password` VARCHAR(255); `role` ENUM('user','admin'); `is_active` BOOLEAN. |
-| `loans` | `id_loan` INT PK; `id_user` INT FK; `date_loan` TIMESTAMP; `expected_return_date` TIMESTAMP; `return_date` TIMESTAMP NULL; `state_loan` ENUM('activo','devuelto'). |
+| `loans` | `id_loan` INT PK; `id_user` INT FK; `date_loan` TIMESTAMP; `expected_return_date` TIMESTAMP; `return_date` TIMESTAMP NULL; `state_loan` ENUM('pendiente','activo','devolucion_solicitada','devuelto','rechazado'). |
 | `loan_details` | `id_loan_detail` INT PK; `id_loan` INT FK; `id_book` INT FK; `state_book_out` ENUM('Excelente','Regular','Maltratado'); `state_book_in` ENUM('Excelente','Regular','Maltratado') NULL. |
-| `sales` | `id_sale` INT PK; `id_user` INT FK; `date_sale` TIMESTAMP; `total` DECIMAL(6,2). |
+| `sales` | `id_sale` INT PK; `id_user` INT FK; `date_sale` TIMESTAMP; `total` DECIMAL(6,2); `state_sale` ENUM('pendiente_pago','confirmada','rechazada'). |
 | `sale_details` | `id_sale_details` INT PK; `id_sale` INT FK; `id_book` INT FK; `amount` INT; `unit_price` DECIMAL(6,2). |
 
 ## Cardinalidades
@@ -40,10 +40,11 @@ La base de datos `minerva_lib_db` gestiona el catálogo de libros, usuarios, pr�
 
 - `users.email` es único. El DPI debe tener 13 caracteres y el teléfono 8; el esquema no impone unicidad para el teléfono.
 - `users.is_active` permite dar de baja una cuenta sin eliminar su historial; los usuarios inactivos no pueden iniciar sesión.
-- `loans.state_loan` puede ser `activo` o `devuelto`. Al crear un préstamo, la fecha real de devolución y el estado de entrada de cada libro son `NULL`.
+- `loans.state_loan` recorre `pendiente`, `activo`, `devolucion_solicitada`, `devuelto` y `rechazado`. Una solicitud no descuenta existencias; el admin registra el estado físico al entregar y aprobarla. El usuario puede solicitar la devolución, pero solo el admin registra el estado recibido y la completa.
+- `sales.state_sale` puede ser `pendiente_pago`, `confirmada` o `rechazada`. El usuario solicita la compra; el admin verifica el pago y la confirma o rechaza. Solo al confirmar se descuentan existencias.
 - El estado de conservación de cada libro puede ser `Excelente`, `Regular` o `Maltratado`.
 - `books.price` es el precio actual. `sale_details.unit_price` conserva el precio aplicado en esa venta aunque luego cambie el precio del catálogo.
-- El stock se descuenta al prestar o vender un libro y se repone al completar su devolución.
+- El stock se descuenta al aprobar la entrega de un préstamo o confirmar una compra; se repone al verificar la devolución del préstamo.
 
 ## Rutas de autenticación y usuarios
 
@@ -62,13 +63,15 @@ La base de datos `minerva_lib_db` gestiona el catálogo de libros, usuarios, pr�
 
 ## Triggers
 
-Los triggers están definidos en `03-procedures-triggers.sql` y ejecutan reglas de inventario automáticamente al insertar detalles o cambiar el estado de un préstamo.
+Los triggers están definidos en `03-procedures-triggers.sql` y ejecutan reglas de inventario automáticamente al aprobar préstamos, confirmar ventas o completar devoluciones.
 
 | Trigger | Cuándo se ejecuta | Qué hace |
 | --- | --- | --- |
-| `trg_before_insert_loan_detail` | Antes de insertar un detalle de préstamo | Descuenta una unidad del stock. Rechaza libros inexistentes o sin existencias; el descuento condicional protege frente a préstamos concurrentes. |
-| `trg_before_insert_sale_detail` | Antes de insertar un detalle de venta | Verifica que la cantidad sea positiva y descuenta esa cantidad del stock. Rechaza libros inexistentes o con stock insuficiente. |
-| `trg_after_update_loan_return` | Después de actualizar un préstamo | Cuando cambia de `activo` a `devuelto`, repone una unidad por cada detalle prestado. |
+| `trg_before_insert_loan_detail` | Antes de insertar un detalle de préstamo | Verifica que el libro exista y tenga stock disponible; las solicitudes pendientes no apartan existencias. |
+| `trg_before_insert_sale_detail` | Antes de insertar un detalle de venta | Valida cantidades y disponibilidad; solo descuenta inmediatamente en ventas confirmadas (como seeds). |
+| `trg_after_update_loan_approval` | Al aprobar una solicitud de préstamo | Descuenta de forma atómica el stock de todos los libros solicitados. |
+| `trg_after_update_sale_confirmation` | Al confirmar una venta | Descuenta de forma atómica el stock, si todavía hay existencias suficientes. |
+| `trg_after_update_loan_return` | Después de actualizar un préstamo | Cuando cambia de `activo` o `devolucion_solicitada` a `devuelto`, repone una unidad por cada detalle prestado. |
 
 ## Procedimientos almacenados
 
@@ -76,15 +79,31 @@ Los procedimientos agrupan las operaciones relacionadas dentro de transacciones.
 
 ### `sp_create_loan(p_id_user, p_expected_return_date, p_details)`
 
-Crea el préstamo y sus detalles. `p_details` es un arreglo JSON con objetos que contienen `id_book` y `state_book_out`. Requiere al menos un detalle, valida los IDs y estados, y devuelve el `id_loan` creado. Al insertar cada detalle, el trigger correspondiente descuenta el stock.
+Crea una solicitud pendiente y sus detalles. `p_details` es un arreglo JSON con objetos que contienen `id_book`. El estado físico de salida lo registra el admin al aprobar la entrega. La solicitud no descuenta existencias.
+
+### `sp_approve_loan(p_id_loan, p_details)`
+
+Aprueba una solicitud pendiente. `p_details` debe incluir el estado físico de salida de cada detalle. Al cambiar el préstamo a `activo`, se descuenta el inventario dentro de la misma transacción; si no hay stock suficiente, la aprobación completa se revierte.
+
+### `sp_request_loan_return(p_id_loan, p_id_user)`
+
+Permite al dueño de un préstamo activo solicitar su devolución. No registra el estado físico ni repone stock.
+
+### `sp_reject_loan(p_id_loan)`
+
+Rechaza una solicitud de préstamo pendiente sin modificar existencias.
 
 ### `sp_return_loan(p_id_loan, p_details)`
 
-Registra la devolución de un préstamo activo. `p_details` debe incluir todos los objetos del préstamo con `id_loan_detail` y `state_book_in`, sin duplicados. Valida que cada detalle pertenezca al préstamo; luego guarda los estados de entrada y marca el préstamo como `devuelto` con la fecha actual. Ese cambio activa el trigger que repone el stock.
+Registra la devolución solicitada. El admin debe incluir todos los objetos del préstamo con `id_loan_detail` y `state_book_in`, sin duplicados. Valida que cada detalle pertenezca al préstamo; luego guarda los estados de entrada y marca el préstamo como `devuelto`. Ese cambio activa el trigger que repone el stock.
 
 ### `sp_create_sale(p_id_user, p_details)`
 
-Crea la venta y sus detalles. `p_details` es un arreglo JSON con objetos que contienen `id_book` y `amount`. Requiere al menos un libro, valida los datos, obtiene el precio actual desde `books.price`, lo copia en `sale_details.unit_price`, calcula `sales.total` y devuelve el ID y el total. El trigger de venta valida y descuenta las existencias.
+Crea una solicitud de compra pendiente de pago. `p_details` es un arreglo JSON con objetos que contienen `id_book` y `amount`. Obtiene el precio actual desde `books.price`, lo copia en `sale_details.unit_price`, calcula `sales.total` y devuelve el ID y el total. No descuenta existencias.
+
+### `sp_confirm_sale(p_id_sale)` y `sp_reject_sale(p_id_sale)`
+
+El admin confirma el pago o rechaza la solicitud pendiente. Al confirmar, el trigger vuelve a verificar y descuenta existencias dentro de la transacción.
 
 ## Inicialización y reinicio
 
