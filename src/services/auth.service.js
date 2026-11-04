@@ -9,7 +9,7 @@ export class AuthService {
     async register(data) {
         const salt = 10;
         const hashedPssw = await bcrypt.hash(data.password, salt);
-        const defaultRole = 'client';
+        const defaultRole = 'user';
 
         const user = await this.userModel.create({
             doc: data.dpi,

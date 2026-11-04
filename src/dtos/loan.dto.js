@@ -10,7 +10,7 @@ export class LoanDetailDTO {
 export class LoanDTO {
     constructor(data = {}) {
         this.id_loan = data.id_loan !== undefined ? Number(data.id_loan) : undefined;
-        this.id_client = data.id_client !== undefined ? Number(data.id_client) : undefined;
+        this.id_user = data.id_user !== undefined ? Number(data.id_user) : undefined;
         this.date_loan = data.date_loan;
         this.expected_return_date = data.expected_return_date;
         this.return_date = data.return_date ?? null;

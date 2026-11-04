@@ -4,7 +4,7 @@ export class SaleModel {
     }
 
     async findById(id) {
-        const query = `SELECT S.id_sale, S.id_client, S.date_sale, S.total,
+        const query = `SELECT S.id_sale, S.id_user, S.date_sale, S.total,
                 SD.id_sale_details, SD.id_book, SD.amount, SD.unit_price
             FROM sales S
             INNER JOIN sale_details SD ON S.id_sale = SD.id_sale
@@ -18,7 +18,7 @@ export class SaleModel {
 
         return {
             id_sale: rows[0].id_sale,
-            id_client: rows[0].id_client,
+            id_user: rows[0].id_user,
             date_sale: rows[0].date_sale,
             total: rows[0].total,
             details: rows.map(({ id_sale_details, id_book, amount, unit_price }) => ({
@@ -33,7 +33,7 @@ export class SaleModel {
     async create(data) {
         const [resultSets] = await this.pool.query(
             'CALL sp_create_sale(?, ?)',
-            [data.id_client, JSON.stringify(data.details)]
+            [data.id_user, JSON.stringify(data.details)]
         );
         const saleResult = resultSets[0]?.[0];
 

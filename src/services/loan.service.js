@@ -6,17 +6,17 @@ export class LoanService {
         this.loanModel = loanModel;
     }
 
-    async create(data, idClient) {
+    async create(data, idUser) {
         const loan = await this.loanModel.create({
-            id_client: idClient,
+            id_user: idUser,
             expected_return_date: data.expected_return_date,
             details: data.details
         });
         return LoanDTO.from(loan);
     }
 
-    async returnLoan(id, details, idClient) {
-        const loan = await this.loanModel.returnLoan(id, details, idClient);
+    async returnLoan(id, details, idUser) {
+        const loan = await this.loanModel.returnLoan(id, details, idUser);
         if (!loan) {
             throw new NotFoundError('Préstamo no encontrado');
         }

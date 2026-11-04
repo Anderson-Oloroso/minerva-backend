@@ -10,7 +10,7 @@ export class SaleDetailDTO {
 export class SaleDTO {
     constructor(data = {}) {
         this.id_sale = data.id_sale !== undefined ? Number(data.id_sale) : undefined;
-        this.id_client = data.id_client !== undefined ? Number(data.id_client) : undefined;
+        this.id_user = data.id_user !== undefined ? Number(data.id_user) : undefined;
         this.date_sale = data.date_sale;
         this.total = data.total !== undefined ? Number(data.total) : undefined;
         this.details = Array.isArray(data.details)

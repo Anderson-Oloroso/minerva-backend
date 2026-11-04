@@ -6,7 +6,7 @@ export class SaleController {
 
     async create(req, res, next) {
         try {
-            const sale = await this.saleService.create(req.body, req.user.id);
+            const sale = await this.saleService.create(req.body, req.user.id_user);
             res.status(201).json({
                 status: 'Success',
                 message: 'Venta creada correctamente',

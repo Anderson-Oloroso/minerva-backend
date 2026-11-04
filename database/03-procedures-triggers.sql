@@ -95,7 +95,7 @@ DROP PROCEDURE IF EXISTS sp_create_sale;
 -- Crear un préstamo y sus detalles en una sola transacción.
 DELIMITER //
 CREATE PROCEDURE sp_create_loan(
-    IN p_id_client INT,
+    IN p_id_user INT,
     IN p_expected_return_date TIMESTAMP,
     IN p_details JSON
 )
@@ -121,8 +121,8 @@ BEGIN
 
     SET n = JSON_LENGTH(p_details);
 
-    INSERT INTO loans (id_client, expected_return_date)
-    VALUES (p_id_client, p_expected_return_date);
+    INSERT INTO loans (id_user, expected_return_date)
+    VALUES (p_id_user, p_expected_return_date);
     SET v_id_loan = LAST_INSERT_ID();
 
     WHILE i < n DO
@@ -260,7 +260,7 @@ DELIMITER ;
 -- Crear una venta, descontar stock y calcular su total.
 DELIMITER //
 CREATE PROCEDURE sp_create_sale(
-    IN p_id_client INT,
+    IN p_id_user INT,
     IN p_details JSON
 )
 BEGIN
@@ -288,8 +288,8 @@ BEGIN
 
     SET n = JSON_LENGTH(p_details);
 
-    INSERT INTO sales (id_client, total)
-    VALUES (p_id_client, 0);
+    INSERT INTO sales (id_user, total)
+    VALUES (p_id_user, 0);
     SET v_id_sale = LAST_INSERT_ID();
 
     WHILE i < n DO

@@ -7,7 +7,7 @@ export class LoanController {
 
     async create(req, res, next) {
         try {
-            const loan = await this.loanService.create(req.body, req.user.id);
+            const loan = await this.loanService.create(req.body, req.user.id_user);
             res.status(201).json({
                 status: 'Success',
                 message: 'Préstamo creado correctamente',
@@ -20,7 +20,7 @@ export class LoanController {
 
     async returnLoan(req, res, next) {
         try {
-            const loan = await this.loanService.returnLoan(req.params.id, req.body.details, req.user.id);
+            const loan = await this.loanService.returnLoan(req.params.id, req.body.details, req.user.id_user);
             res.status(200).json({
                 status: 'Success',
                 message: 'Préstamo devuelto correctamente',

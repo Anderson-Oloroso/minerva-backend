@@ -14,7 +14,7 @@ export class AuthController {
             const newUser = await this.authService.register(req.body);
             res.status(201).json({
                 status: 'Succes',
-                message: 'Cliente registrado correctamente',
+                message: 'Usuario registrado correctamente',
                 data: newUser
             });
         } catch (err) {
@@ -53,7 +53,7 @@ export class AuthController {
         try {
             res.status(200).json({
                 status: 'Success',
-                message: 'Elimina el token de acceso del cliente para cerrar sesión.'
+                message: 'Elimina el token de acceso del usuario para cerrar sesión.'
             });
         } catch (err) {
             next(err);

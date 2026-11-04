@@ -1,7 +1,7 @@
 export class UserDTO {
     constructor(data = {}) {
-        this.id = data.id || data.id_client;
-        this.name = data.name || `${data.name_client || ''} ${data.last_name || ''}`.trim();
+        this.id_user = data.id_user;
+        this.name_user = data.name_user || `${data.name || ''} ${data.last_name || ''}`.trim();
         this.email = data.email;
         this.role = data.role;
     }

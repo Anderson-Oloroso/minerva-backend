@@ -30,13 +30,13 @@ INSERT INTO books (id_book, title, isbn, year_publication, no_pages, wrote_langu
 (3, 'Ficciones', '9789875666489', 1944, 220, 'Español', 95.00, 5, 3, 3, 3),
 (4, 'Don Quijote de la Mancha', '9788420412143', 1605, 863, 'Español', 180.00, 6, 4, 4, 4);
 
--- 5. Insertar Clientes (Incluyendo un Administrador y un Cliente regular con hash bcrypt)
-INSERT INTO clients (id_client, dpi, name_client, last_name, phone, email, password, role) VALUES 
+-- 5. Insertar Usuarios (Incluyendo un Administrador y un usuario regular con hash bcrypt)
+INSERT INTO users (id_user, dpi, name_user, last_name, phone, email, password, role) VALUES
 (1, '3012345670101', 'Admin', 'Sistema', '55000000', 'admin@minerva.com', '$2b$10$gJL/z0q129h/SRby0qVsSuoUv.HkanC.k4ofP8zB7gf7TVkEsJj/2', 'admin'), -- Contraseña: @Minerva_Lib/871
-(2, '2987654320102', 'Juan Carlos', 'Pérez Morales', '55123456', 'juan.perez@gmail.com', '$2b$10$k8aDduHdVfhsCI.rXJxtz.BIBR9efN31.l.vkNQ5Wmh4C7e03uCoa', 'client');
+(2, '2987654320102', 'Juan Carlos', 'Pérez Morales', '55123456', 'juan.perez@gmail.com', '$2b$10$k8aDduHdVfhsCI.rXJxtz.BIBR9efN31.l.vkNQ5Wmh4C7e03uCoa', 'user');
 
 -- 6. Insertar Préstamos (Préstamo realizado por Juan Carlos)
-INSERT INTO loans (id_loan, id_client, expected_return_date, return_date, state_loan) VALUES 
+INSERT INTO loans (id_loan, id_user, expected_return_date, return_date, state_loan) VALUES
 (1, 2, '2026-11-01 23:59:59', NULL, 'activo');
 
 -- 7. Detalles del Préstamo
@@ -44,7 +44,7 @@ INSERT INTO loan_details (id_loan_detail, id_loan, id_book, state_book_out, stat
 (1, 1, 1, 'Excelente', NULL);
 
 -- 8. Insertar Ventas
-INSERT INTO sales (id_sale, id_client, total) VALUES 
+INSERT INTO sales (id_sale, id_user, total) VALUES
 (1, 2, 110.00);
 
 -- 9. Detalles de la Venta

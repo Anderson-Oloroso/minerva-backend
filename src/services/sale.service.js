@@ -5,9 +5,9 @@ export class SaleService {
         this.saleModel = saleModel;
     }
 
-    async create(data, idClient) {
+    async create(data, idUser) {
         const sale = await this.saleModel.create({
-            id_client: idClient,
+            id_user: idUser,
             details: data.details
         });
         return SaleDTO.from(sale);

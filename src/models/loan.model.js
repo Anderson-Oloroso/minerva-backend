@@ -4,7 +4,7 @@ export class LoanModel {
     }
 
     async findById(id) {
-        const query = `SELECT L.id_loan, L.id_client, L.date_loan, L.expected_return_date,
+        const query = `SELECT L.id_loan, L.id_user, L.date_loan, L.expected_return_date,
                 L.return_date, L.state_loan, LD.id_loan_detail, LD.id_book,
                 LD.state_book_out, LD.state_book_in
             FROM loans L
@@ -19,7 +19,7 @@ export class LoanModel {
 
         return {
             id_loan: rows[0].id_loan,
-            id_client: rows[0].id_client,
+            id_user: rows[0].id_user,
             date_loan: rows[0].date_loan,
             expected_return_date: rows[0].expected_return_date,
             return_date: rows[0].return_date,
@@ -36,7 +36,7 @@ export class LoanModel {
     async create(data) {
         const [resultSets] = await this.pool.query(
             'CALL sp_create_loan(?, ?, ?)',
-            [data.id_client, data.expected_return_date, JSON.stringify(data.details)]
+            [data.id_user, data.expected_return_date, JSON.stringify(data.details)]
         );
         const loanResult = resultSets[0]?.[0];
 
@@ -52,13 +52,13 @@ export class LoanModel {
         return loan;
     }
 
-    async returnLoan(id, details, idClient) {
+    async returnLoan(id, details, idUser) {
         const [rows] = await this.pool.execute(
-            'SELECT id_client FROM loans WHERE id_loan = ?',
+            'SELECT id_user FROM loans WHERE id_loan = ?',
             [id]
         );
 
-        if (rows.length === 0 || Number(rows[0].id_client) !== Number(idClient)) {
+        if (rows.length === 0 || Number(rows[0].id_user) !== Number(idUser)) {
             return null;
         }
 
