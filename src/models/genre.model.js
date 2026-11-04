@@ -26,14 +26,8 @@ export class GenreModel {
 
     async update(id, data) {
         const query = 'UPDATE genres SET name_genre = IFNULL(?, name_genre) WHERE id_genre = ?';
-        const [ result ] = await this.pool.execute(query, [data.genre, id]);
-        if (result.affectedRows === 0) {
-            return null;
-        }
-        return {
-            id: Number(id),
-            genre: data.genre === null ? '[AVISO]: genero no modificado' : data.genre
-        };
+        await this.pool.execute(query, [data.genre, id]);
+        return this.findById(id);
     }
 
     async delete(id) {
