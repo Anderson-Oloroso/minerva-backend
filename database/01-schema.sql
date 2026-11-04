@@ -1,4 +1,8 @@
-CREATE DATABASE IF NOT EXISTS minerva_lib_db;
+SET NAMES utf8mb4;
+
+CREATE DATABASE IF NOT EXISTS minerva_lib_db
+    CHARACTER SET utf8mb4
+    COLLATE utf8mb4_unicode_ci;
 
 USE minerva_lib_db;
 
@@ -21,6 +25,7 @@ CREATE TABLE IF NOT EXISTS books(
     id_book INT PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(50) NOT NULL,
     isbn VARCHAR(20) NOT NULL,
+    image_url VARCHAR(2048) NULL,
     year_publication SMALLINT UNSIGNED NOT NULL,
     no_pages INT NOT NULL,
     wrote_language VARCHAR(50) NOT NULL,

@@ -11,6 +11,11 @@ export const createBookValidator = [
         .notEmpty().withMessage('El ISBN es obligatorio')
         .isISBN().withMessage('El ISBN debe ser válido'),
 
+    body('image_url')
+        .optional({ nullable: true, checkFalsy: true })
+        .isLength({ max: 2048 }).withMessage('La URL de la portada no puede superar los 2048 caracteres')
+        .isURL({ protocols: ['http', 'https'], require_protocol: true }).withMessage('La URL de la portada debe comenzar con http:// o https://'),
+
     body('year_publication')
         .isInt({ min: 1800, max: new Date().getFullYear() }).withMessage('El año de publicación debe ser un entero positivo válido'),
 
@@ -50,6 +55,11 @@ export const updateBookValidator = [
         .optional({ nullable: true })
         .trim()
         .isISBN().withMessage('El ISBN debe ser válido'),
+
+    body('image_url')
+        .optional({ nullable: true, checkFalsy: true })
+        .isLength({ max: 2048 }).withMessage('La URL de la portada no puede superar los 2048 caracteres')
+        .isURL({ protocols: ['http', 'https'], require_protocol: true }).withMessage('La URL de la portada debe comenzar con http:// o https://'),
 
     body('year_publication')
         .optional({ nullable: true })

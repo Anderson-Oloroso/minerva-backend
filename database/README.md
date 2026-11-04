@@ -1,6 +1,6 @@
 # Base de datos Minerva Lib
 
-La base de datos `minerva_lib_db` gestiona el catálogo de libros, usuarios, préstamos y ventas. Está diseñada para MySQL 8 y se define en `01-schema.sql`.
+La base de datos `minerva_lib_db` gestiona el catálogo de libros, usuarios, préstamos y ventas. Está diseñada para MySQL 8, usa `utf8mb4` para almacenar correctamente texto en español y se define en `01-schema.sql`.
 
 ## Tablas y campos
 
@@ -11,7 +11,7 @@ La base de datos `minerva_lib_db` gestiona el catálogo de libros, usuarios, pr�
 | `authors` | `id_author` INT PK; `name_author` VARCHAR(50). |
 | `publishers` | `id_publisher` INT PK; `name_publisher` VARCHAR(50). |
 | `genres` | `id_genre` INT PK; `name_genre` VARCHAR(50). |
-| `books` | `id_book` INT PK; `title` VARCHAR(50); `isbn` VARCHAR(20); `year_publication` SMALLINT UNSIGNED; `no_pages` INT; `wrote_language` VARCHAR(50); `price` DECIMAL(6,2); `stock` INT; `id_author` INT FK NULL; `id_publisher` INT FK NULL; `id_genre` INT FK. |
+| `books` | `id_book` INT PK; `title` VARCHAR(50); `isbn` VARCHAR(20); `image_url` VARCHAR(2048) NULL; `year_publication` SMALLINT UNSIGNED; `no_pages` INT; `wrote_language` VARCHAR(50); `price` DECIMAL(6,2); `stock` INT; `id_author` INT FK NULL; `id_publisher` INT FK NULL; `id_genre` INT FK. |
 | `users` | `id_user` INT PK; `dpi` VARCHAR(13); `name_user` VARCHAR(50); `last_name` VARCHAR(50); `phone` VARCHAR(8); `email` VARCHAR(255) UNIQUE; `password` VARCHAR(255); `role` ENUM('user','admin'); `is_active` BOOLEAN. |
 | `loans` | `id_loan` INT PK; `id_user` INT FK; `date_loan` TIMESTAMP; `expected_return_date` TIMESTAMP; `return_date` TIMESTAMP NULL; `state_loan` ENUM('activo','devuelto'). |
 | `loan_details` | `id_loan_detail` INT PK; `id_loan` INT FK; `id_book` INT FK; `state_book_out` ENUM('Excelente','Regular','Maltratado'); `state_book_in` ENUM('Excelente','Regular','Maltratado') NULL. |
@@ -94,16 +94,18 @@ Al iniciar MySQL con un volumen vacío, Docker Compose ejecuta los scripts SQL d
 2. `02-seeds.sql`: carga datos de ejemplo.
 3. `03-procedures-triggers.sql`: crea los triggers y procedimientos.
 
+`01-schema.sql` configura `utf8mb4` y define `books.image_url`, que admite una URL HTTP o HTTPS de hasta 2048 caracteres. Docker ejecuta los scripts de inicialización únicamente al crear un volumen vacío; para reiniciar la base y cargar los cambios, elimina el volumen de datos de MySQL y vuelve a iniciar el servicio.
+
 ### Credenciales de los datos de ejemplo
 
 Estas credenciales son únicamente para desarrollo y pruebas locales; no las uses en producción.
 
 | Rol | Correos | Contraseña |
 | --- | --- | --- |
-| Admin | `admin@minerva.com`, `soporte.admin@minerva.com` | `@User/809--` |
+| Admin | `admin@minerva.com`, `soporte.admin@minerva.com` | `@Minerva_Lib/871` |
 | Usuario | `juan.perez@gmail.com`, `ana.gomez@gmail.com`, `carlos.estrada@gmail.com`, `maria.castillo@gmail.com`, `luis.morales@gmail.com`, `gabriela.santos@gmail.com`, `jorge.ramirez@gmail.com`, `claudia.ortiz@gmail.com`, `kevin.hernandez@gmail.com`, `valeria.diaz@gmail.com` | `@User/809--` |
 
-Las contraseñas se guardan como hashes bcrypt en `02-seeds.sql`. Todas las cuentas de ejemplo comparten la contraseña indicada. Los seeds se ejecutan automáticamente solo cuando MySQL inicializa un volumen vacío.
+Las contraseñas se guardan como hashes bcrypt en `02-seeds.sql`. Las cuentas admin conservan su contraseña original; los usuarios regulares comparten la contraseña indicada. Los seeds se ejecutan automáticamente solo cuando MySQL inicializa un volumen vacío.
 
 Para iniciar los servicios:
 
