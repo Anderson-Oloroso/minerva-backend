@@ -19,16 +19,36 @@ export const createLoanValidator = [
             detail !== null &&
             typeof detail === 'object' &&
             !Array.isArray(detail) &&
-            isPositiveDatabaseInteger(detail.id_book) &&
-            states.includes(detail.state_book_out)
+            isPositiveDatabaseInteger(Number(detail.id_book))
         ))
-        .withMessage('Cada detalle debe incluir id_book válido y state_book_out permitido')
+        .withMessage('Cada detalle debe incluir un id_book válido')
 ];
 
-export const returnLoanValidator = [
+export const approveLoanValidator = [
     param('id')
-        .isInt({ min: 1, max: 2147483647 })
-        .withMessage('El ID del préstamo debe ser un entero positivo'),
+        .isInt({ min: 1, max: 2147483647 }).withMessage('El ID del préstamo debe ser un entero positivo'),
+    body('details')
+        .isArray({ min: 1 }).withMessage('Debe indicar el estado de todos los libros')
+        .bail(),
+    body('details')
+        .custom(details => details.every(detail =>
+            detail !== null &&
+            typeof detail === 'object' &&
+            !Array.isArray(detail) &&
+            isPositiveDatabaseInteger(Number(detail.id_loan_detail)) &&
+            states.includes(detail.state_book_out)
+        ))
+        .withMessage('Cada libro debe incluir un detalle y un estado físico de salida válidos')
+];
+
+export const loanIdParamValidator = [
+    param('id').isInt({ min: 1, max: 2147483647 }).withMessage('El ID del préstamo debe ser un entero positivo')
+];
+
+export const requestLoanReturnValidator = [...loanIdParamValidator];
+
+export const returnLoanValidator = [
+    ...loanIdParamValidator,
     body('details')
         .isArray({ min: 1 }).withMessage('La devolución debe incluir los detalles del préstamo')
         .bail()
@@ -36,7 +56,7 @@ export const returnLoanValidator = [
             detail !== null &&
             typeof detail === 'object' &&
             !Array.isArray(detail) &&
-            isPositiveDatabaseInteger(detail.id_loan_detail) &&
+            isPositiveDatabaseInteger(Number(detail.id_loan_detail)) &&
             states.includes(detail.state_book_in)
         ))
         .withMessage('Cada detalle debe incluir id_loan_detail válido y state_book_in permitido')

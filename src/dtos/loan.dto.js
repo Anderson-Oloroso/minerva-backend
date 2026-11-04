@@ -15,6 +15,7 @@ export class LoanDTO {
         this.expected_return_date = data.expected_return_date;
         this.return_date = data.return_date ?? null;
         this.state_loan = data.state_loan;
+        this.user_name = data.user_name ?? undefined;
         this.details = Array.isArray(data.details)
             ? data.details.map(detail => new LoanDetailDTO(detail))
             : undefined;

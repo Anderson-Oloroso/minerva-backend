@@ -1,9 +1,27 @@
 export class LoanController {
     constructor(loanService) {
         this.loanService = loanService;
+        this.getAll = this.getAll.bind(this);
         this.getMine = this.getMine.bind(this);
         this.create = this.create.bind(this);
+        this.approve = this.approve.bind(this);
+        this.requestReturn = this.requestReturn.bind(this);
+        this.reject = this.reject.bind(this);
         this.returnLoan = this.returnLoan.bind(this);
+    }
+
+    async getAll(req, res, next) {
+        try {
+            const loans = await this.loanService.getAll();
+            res.status(200).json({
+                status: 'Success',
+                total: loans.length,
+                message: 'Préstamos registrados',
+                data: loans
+            });
+        } catch (err) {
+            next(err);
+        }
     }
 
     async getMine(req, res, next) {
@@ -33,9 +51,36 @@ export class LoanController {
         }
     }
 
+    async approve(req, res, next) {
+        try {
+            const loan = await this.loanService.approve(req.params.id, req.body.details);
+            res.status(200).json({ status: 'Success', message: 'Préstamo aprobado y entregado', data: loan });
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    async requestReturn(req, res, next) {
+        try {
+            const loan = await this.loanService.requestReturn(req.params.id, req.user.id_user);
+            res.status(200).json({ status: 'Success', message: 'Solicitud de devolución registrada', data: loan });
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    async reject(req, res, next) {
+        try {
+            const loan = await this.loanService.reject(req.params.id);
+            res.status(200).json({ status: 'Success', message: 'Solicitud de préstamo rechazada', data: loan });
+        } catch (err) {
+            next(err);
+        }
+    }
+
     async returnLoan(req, res, next) {
         try {
-            const loan = await this.loanService.returnLoan(req.params.id, req.body.details, req.user.id_user);
+            const loan = await this.loanService.returnLoan(req.params.id, req.body.details);
             res.status(200).json({
                 status: 'Success',
                 message: 'Préstamo devuelto correctamente',

@@ -6,6 +6,10 @@ export class LoanService {
         this.loanModel = loanModel;
     }
 
+    async getAll() {
+        return LoanDTO.fromList(await this.loanModel.findAll());
+    }
+
     async getMine(idUser) {
         return LoanDTO.fromList(await this.loanModel.findAllByUserId(idUser));
     }
@@ -19,8 +23,20 @@ export class LoanService {
         return LoanDTO.from(loan);
     }
 
-    async returnLoan(id, details, idUser) {
-        const loan = await this.loanModel.returnLoan(id, details, idUser);
+    async approve(id, details) {
+        return LoanDTO.from(await this.loanModel.approve(id, details));
+    }
+
+    async requestReturn(id, idUser) {
+        return LoanDTO.from(await this.loanModel.requestReturn(id, idUser));
+    }
+
+    async reject(id) {
+        return LoanDTO.from(await this.loanModel.reject(id));
+    }
+
+    async returnLoan(id, details) {
+        const loan = await this.loanModel.returnLoan(id, details);
         if (!loan) {
             throw new NotFoundError('Préstamo no encontrado');
         }
