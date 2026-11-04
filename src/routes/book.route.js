@@ -23,3 +23,5 @@ bookRouter.get('/:id', bookIdParamValidator, validationMiddleware, bookControlle
 bookRouter.post('/', authMiddleware.requireAuth, authMiddleware.requireAdmin, createBookValidator, validationMiddleware, bookController.create);
 bookRouter.put('/:id', authMiddleware.requireAuth, authMiddleware.requireAdmin, bookIdParamValidator, updateBookValidator, validationMiddleware, bookController.update);
 bookRouter.delete('/:id', authMiddleware.requireAuth, authMiddleware.requireAdmin, bookIdParamValidator, validationMiddleware, bookController.delete);
+
+export default bookRouter;

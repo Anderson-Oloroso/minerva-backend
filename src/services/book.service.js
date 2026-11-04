@@ -1,11 +1,11 @@
-import { NotFoundError } from '../errors/not-found.error.js';
+import { NotFoundError } from '../utils/errors.js';
 import { BookDTO } from '../dtos/book.dto.js';
 
 export class BookService {
     constructor(bookModel) {
         this.bookModel = bookModel;
     }
-    
+
     async getAll() {
         const books = await this.bookModel.findAll();
         return BookDTO.fromList(books);
@@ -15,7 +15,7 @@ export class BookService {
         const book = await this.bookModel.findById(id);
         if (!book) {
             throw new NotFoundError('Libro no encontrado');
-        } 
+        }
         return BookDTO.from(book);
     }
 
@@ -30,5 +30,13 @@ export class BookService {
             throw new NotFoundError('Libro no encontrado');
         }
         return BookDTO.from(updatedBook);
+    }
+
+    async delete(id) {
+        const deleted = await this.bookModel.delete(id);
+        if (!deleted) {
+            throw new NotFoundError('Libro no encontrado');
+        }
+        return true;
     }
 }
