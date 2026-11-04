@@ -6,6 +6,10 @@ export class LoanService {
         this.loanModel = loanModel;
     }
 
+    async getMine(idUser) {
+        return LoanDTO.fromList(await this.loanModel.findAllByUserId(idUser));
+    }
+
     async create(data, idUser) {
         const loan = await this.loanModel.create({
             id_user: idUser,

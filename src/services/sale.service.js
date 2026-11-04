@@ -5,6 +5,10 @@ export class SaleService {
         this.saleModel = saleModel;
     }
 
+    async getMine(idUser) {
+        return SaleDTO.fromList(await this.saleModel.findAllByUserId(idUser));
+    }
+
     async create(data, idUser) {
         const sale = await this.saleModel.create({
             id_user: idUser,

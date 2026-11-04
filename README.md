@@ -139,8 +139,8 @@ ejemplo, `1.2.3` requiere `/api/v1`. Al cambiar el major, actualiza `API_PREFIX`
 | Autenticación | `POST /auth/register`, `POST /auth/login`, `POST /auth/logout` | Público |
 | Perfil y usuarios | `/users` y `/users/me` | Autenticación; administración para gestión de usuarios |
 | Libros, autores, editoriales y géneros | `/books`, `/authors`, `/publishers`, `/genres` | Consulta pública; cambios para administrador |
-| Préstamos | `POST /loans`, `PUT /loans/:id/return` | Usuario autenticado |
-| Ventas | `POST /sales` | Usuario autenticado |
+| Préstamos | `GET /loans/me`, `POST /loans`, `PUT /loans/:id/return` | Usuario autenticado; el historial y las devoluciones pertenecen al usuario autenticado |
+| Ventas | `GET /sales/me`, `POST /sales` | Usuario autenticado; el historial pertenece al usuario autenticado |
 
 Las rutas de la tabla son relativas al prefijo: por ejemplo, `GET /api/v1/books`. Las cuentas
 se desactivan sin borrar su historial. Consulta [database/README.md](./database/README.md)

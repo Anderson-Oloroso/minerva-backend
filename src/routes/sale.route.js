@@ -14,6 +14,7 @@ const authMiddleware = new AuthMiddleware();
 
 const saleRouter = Router();
 
+saleRouter.get('/me', authMiddleware.requireAuth, saleController.getMine);
 saleRouter.post('/', authMiddleware.requireAuth, createSaleValidator, validationMiddleware, saleController.create);
 
 export default saleRouter;

@@ -14,6 +14,7 @@ const authMiddleware = new AuthMiddleware();
 
 const loanRouter = Router();
 
+loanRouter.get('/me', authMiddleware.requireAuth, loanController.getMine);
 loanRouter.post('/', authMiddleware.requireAuth, createLoanValidator, validationMiddleware, loanController.create);
 loanRouter.put('/:id/return', authMiddleware.requireAuth, returnLoanValidator, validationMiddleware, loanController.returnLoan);
 
