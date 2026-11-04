@@ -12,8 +12,8 @@ export class AuthService {
         const defaultRole = 'user';
 
         const user = await this.userModel.create({
-            doc: data.dpi,
-            name: data.name,
+            dpi: data.dpi,
+            name_user: data.name,
             last_name: data.last_name,
             phone: data.phone,
             email: data.email,
@@ -38,8 +38,4 @@ export class AuthService {
         return UserDTO.from(user);
     }
 
-    async getProfile(userId) {
-        const user = await this.userModel.findById(userId);
-        return UserDTO.from(user);
-    }
 }

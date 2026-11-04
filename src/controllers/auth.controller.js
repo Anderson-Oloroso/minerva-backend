@@ -6,14 +6,13 @@ export class AuthController {
         this.register = this.register.bind(this);
         this.login = this.login.bind(this);
         this.logout = this.logout.bind(this);
-        this.getProfile = this.getProfile.bind(this);
     }
 
     async register(req, res, next) {
         try {
             const newUser = await this.authService.register(req.body);
             res.status(201).json({
-                status: 'Succes',
+                status: 'Success',
                 message: 'Usuario registrado correctamente',
                 data: newUser
             });
@@ -54,17 +53,6 @@ export class AuthController {
             res.status(200).json({
                 status: 'Success',
                 message: 'Elimina el token de acceso del usuario para cerrar sesión.'
-            });
-        } catch (err) {
-            next(err);
-        }
-    }
-
-    async getProfile(req, res, next) {
-        try {
-            res.status(200).json({
-                status: 'Success',
-                data: req.user
             });
         } catch (err) {
             next(err);

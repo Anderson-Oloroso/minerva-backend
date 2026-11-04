@@ -42,7 +42,8 @@ CREATE TABLE IF NOT EXISTS users (
     phone VARCHAR(8) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL, 
-    role ENUM('user', 'admin') DEFAULT 'user' NOT NULL
+    role ENUM('user', 'admin') DEFAULT 'user' NOT NULL,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE
 );
 
 CREATE TABLE IF NOT EXISTS loans(
@@ -50,7 +51,7 @@ CREATE TABLE IF NOT EXISTS loans(
     id_user INT NOT NULL,
     date_loan TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     expected_return_date TIMESTAMP NOT NULL,
-    return_date TIMESTAMP NULL DEFAULT NULL,
+    return_date TIMESTAMP NULL, 
     state_loan ENUM('activo', 'devuelto') DEFAULT 'activo',
     FOREIGN KEY (id_user) REFERENCES users(id_user)
 );
@@ -60,7 +61,7 @@ CREATE TABLE IF NOT EXISTS loan_details(
     id_loan INT NOT NULL,
     id_book INT NOT NULL,
     state_book_out ENUM('Excelente', 'Regular', 'Maltratado') NOT NULL,
-    state_book_in ENUM('Excelente', 'Regular', 'Maltratado') NULL DEFAULT NULL,
+    state_book_in ENUM('Excelente', 'Regular', 'Maltratado') NULL, 
     FOREIGN KEY (id_loan) REFERENCES loans(id_loan) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (id_book) REFERENCES books(id_book) ON UPDATE CASCADE ON DELETE CASCADE
 );  
