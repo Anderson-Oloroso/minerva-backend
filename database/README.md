@@ -12,7 +12,7 @@ La base de datos `minerva_lib_db` gestiona el catálogo de libros, usuarios, pr�
 | `publishers` | `id_publisher` INT PK; `name_publisher` VARCHAR(50). |
 | `genres` | `id_genre` INT PK; `name_genre` VARCHAR(50). |
 | `books` | `id_book` INT PK; `title` VARCHAR(50); `isbn` VARCHAR(20); `year_publication` SMALLINT UNSIGNED; `no_pages` INT; `wrote_language` VARCHAR(50); `price` DECIMAL(6,2); `stock` INT; `id_author` INT FK NULL; `id_publisher` INT FK NULL; `id_genre` INT FK. |
-| `users` | `id_user` INT PK; `dpi` VARCHAR(13); `name_user` VARCHAR(50); `last_name` VARCHAR(50); `phone` VARCHAR(8); `email` VARCHAR(255) UNIQUE; `password` VARCHAR(255); `role` ENUM('user','admin'). |
+| `users` | `id_user` INT PK; `dpi` VARCHAR(13); `name_user` VARCHAR(50); `last_name` VARCHAR(50); `phone` VARCHAR(8); `email` VARCHAR(255) UNIQUE; `password` VARCHAR(255); `role` ENUM('user','admin'); `is_active` BOOLEAN. |
 | `loans` | `id_loan` INT PK; `id_user` INT FK; `date_loan` TIMESTAMP; `expected_return_date` TIMESTAMP; `return_date` TIMESTAMP NULL; `state_loan` ENUM('activo','devuelto'). |
 | `loan_details` | `id_loan_detail` INT PK; `id_loan` INT FK; `id_book` INT FK; `state_book_out` ENUM('Excelente','Regular','Maltratado'); `state_book_in` ENUM('Excelente','Regular','Maltratado') NULL. |
 | `sales` | `id_sale` INT PK; `id_user` INT FK; `date_sale` TIMESTAMP; `total` DECIMAL(6,2). |
@@ -34,17 +34,31 @@ La base de datos `minerva_lib_db` gestiona el catálogo de libros, usuarios, pr�
 
 `loans`/`loan_details` y `sales`/`sale_details` separan los datos generales de cada operación de sus libros. Así, cada detalle funciona como vínculo entre el encabezado y un libro.
 
-![Diagrama físico de la base de datos Minerva Lib (MySQL Workbench)](./diagram/wkb_minerva_lib.png)
-
-> **Nota:** el PNG actual todavía muestra `clients` y nombres de campos anteriores. La tabla de campos y cardinalidades de arriba refleja el esquema actual; actualiza el diagrama en MySQL Workbench para que coincida con `users` y `id_user`.
+![Diagrama físico actualizado de la base de datos Minerva Lib](./diagram/ddb_minerva_lib.png)
 
 ## Reglas principales
 
 - `users.email` es único. El DPI debe tener 13 caracteres y el teléfono 8; el esquema no impone unicidad para el teléfono.
+- `users.is_active` permite dar de baja una cuenta sin eliminar su historial; los usuarios inactivos no pueden iniciar sesión.
 - `loans.state_loan` puede ser `activo` o `devuelto`. Al crear un préstamo, la fecha real de devolución y el estado de entrada de cada libro son `NULL`.
 - El estado de conservación de cada libro puede ser `Excelente`, `Regular` o `Maltratado`.
 - `books.price` es el precio actual. `sale_details.unit_price` conserva el precio aplicado en esa venta aunque luego cambie el precio del catálogo.
 - El stock se descuenta al prestar o vender un libro y se repone al completar su devolución.
+
+## Rutas de autenticación y usuarios
+
+| Método y ruta | Permiso | Acción |
+| --- | --- | --- |
+| `POST /auth/register` | Público | Registrar una cuenta con rol `user`. |
+| `POST /auth/login` | Público | Iniciar sesión. |
+| `GET /users/me` | Usuario autenticado | Consultar el propio perfil. |
+| `PUT /users/me` | Usuario autenticado | Actualizar sus datos; no puede cambiar su rol. |
+| `DELETE /users/me` | Usuario autenticado | Desactivar su propia cuenta; conserva préstamos y ventas. |
+| `GET /users` | Admin | Listar usuarios. |
+| `POST /users` | Admin | Crear un usuario. |
+| `GET /users/:id` | Admin | Consultar un usuario. |
+| `PUT /users/:id` | Admin | Actualizar datos, rol o estado de la cuenta. |
+| `DELETE /users/:id` | Admin | Desactivar una cuenta sin borrar su historial. |
 
 ## Triggers
 

@@ -17,7 +17,7 @@ passport.use(new JwtStrategy({
             return done(null, false);
         }
 
-        const user = await userModel.findById(payload.sub);
+        const user = await userModel.findActiveById(payload.sub);
         if (!user) {
             return done(null, false);
         }
