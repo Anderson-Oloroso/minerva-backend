@@ -94,6 +94,17 @@ Al iniciar MySQL con un volumen vacío, Docker Compose ejecuta los scripts SQL d
 2. `02-seeds.sql`: carga datos de ejemplo.
 3. `03-procedures-triggers.sql`: crea los triggers y procedimientos.
 
+### Credenciales de los datos de ejemplo
+
+Estas credenciales son únicamente para desarrollo y pruebas locales; no las uses en producción.
+
+| Rol | Correos | Contraseña |
+| --- | --- | --- |
+| Admin | `admin@minerva.com`, `soporte.admin@minerva.com` | `@User/809--` |
+| Usuario | `juan.perez@gmail.com`, `ana.gomez@gmail.com`, `carlos.estrada@gmail.com`, `maria.castillo@gmail.com`, `luis.morales@gmail.com`, `gabriela.santos@gmail.com`, `jorge.ramirez@gmail.com`, `claudia.ortiz@gmail.com`, `kevin.hernandez@gmail.com`, `valeria.diaz@gmail.com` | `@User/809--` |
+
+Las contraseñas se guardan como hashes bcrypt en `02-seeds.sql`. Todas las cuentas de ejemplo comparten la contraseña indicada. Los seeds se ejecutan automáticamente solo cuando MySQL inicializa un volumen vacío.
+
 Para iniciar los servicios:
 
 ```bash
