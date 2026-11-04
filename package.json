@@ -1,7 +1,7 @@
 {
-  "name": "minerva-lib-backend",
+  "name": "minerva-backend",
   "version": "1.0.0",
-  "description": "Backend of project minerva-lib, bases on node.js and mysql connected with a frontend as a fullstack application",
+  "description": "Backend API for the Minerva Lib application, built with Node.js and MySQL",
   "keywords": [
     "minerva-lib",
     "backend",
@@ -14,13 +14,13 @@
     "sales",
     "loans"
   ],
-  "homepage": "https://github.com/Anderson-Oloroso/minerva-lib#readme",
+  "homepage": "https://github.com/Anderson-Oloroso/minerva-backend#readme",
   "bugs": {
-    "url": "https://github.com/Anderson-Oloroso/minerva-lib/issues"
+    "url": "https://github.com/Anderson-Oloroso/minerva-backend/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Anderson-Oloroso/minerva-lib.git"
+    "url": "git+https://github.com/Anderson-Oloroso/minerva-backend.git"
   },
   "license": "ISC",
   "author": "Anderson-Oloroso",
@@ -44,6 +44,7 @@
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.24.6",
     "passport": "^0.7.0",
-    "passport-jwt": "^4.0.1"
+    "passport-jwt": "^4.0.1",
+    "semver": "^7.8.5"
   }
 }
