@@ -1,8 +1,9 @@
-import { apiPrefix, serverPort } from './config/env.config.js';
+import { serverPort } from './config/env.config.js';
+import { apiPrefix } from './config/version.config.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import app from './app.js';
-import Database from './config/database.config.js';
+import { Database } from './config/database.config.js';
 
 export class Server {
     #app;
@@ -59,5 +60,3 @@ if (isMain) {
     const server = new Server();
     server.start();
 }
-
-export default Server;

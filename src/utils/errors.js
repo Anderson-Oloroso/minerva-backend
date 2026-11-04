@@ -33,5 +33,3 @@ export class ValidationError extends AppError {
         super(message, 400, details);
     }
 }
-
-export default AppError;

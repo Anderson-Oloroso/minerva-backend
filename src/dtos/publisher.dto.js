@@ -14,6 +14,3 @@ export class PublisherDTO {
         return list.map(item => new PublisherDTO(item));
     }
 }
-
-export const CreatePublisherDto = PublisherDTO;
-export default PublisherDTO;

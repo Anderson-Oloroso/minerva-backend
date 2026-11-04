@@ -6,9 +6,6 @@ info:
 http:
   method: POST
   url: "{{baseUrl}}/genres"
-  headers:
-    - name: Authorization
-      value: "Bearer {{accessToken}}"
   body:
     type: json
     data: |-

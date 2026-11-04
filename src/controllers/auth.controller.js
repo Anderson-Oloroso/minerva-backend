@@ -1,4 +1,4 @@
-import TokenService from '../services/token.service.js';
+import { TokenService } from '../services/token.service.js';
 
 export class AuthController {
     constructor(authService) {
@@ -6,15 +6,14 @@ export class AuthController {
         this.register = this.register.bind(this);
         this.login = this.login.bind(this);
         this.logout = this.logout.bind(this);
-        this.getProfile = this.getProfile.bind(this);
     }
 
     async register(req, res, next) {
         try {
             const newUser = await this.authService.register(req.body);
             res.status(201).json({
-                status: 'Succes',
-                message: 'Cliente registrado correctamente',
+                status: 'Success',
+                message: 'Usuario registrado correctamente',
                 data: newUser
             });
         } catch (err) {
@@ -53,23 +52,10 @@ export class AuthController {
         try {
             res.status(200).json({
                 status: 'Success',
-                message: 'Elimina el token de acceso del cliente para cerrar sesión.'
-            });
-        } catch (err) {
-            next(err);
-        }
-    }
-
-    async getProfile(req, res, next) {
-        try {
-            res.status(200).json({
-                status: 'Success',
-                data: req.user
+                message: 'Elimina el token de acceso del usuario para cerrar sesión.'
             });
         } catch (err) {
             next(err);
         }
     }
 }
-
-export default AuthController;

@@ -75,5 +75,3 @@ export class AuthorController {
         }
     }
 }
-
-export default AuthorController;

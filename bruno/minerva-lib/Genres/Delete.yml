@@ -6,9 +6,6 @@ info:
 http:
   method: DELETE
   url: "{{baseUrl}}/genres/6"
-  headers:
-    - name: Authorization
-      value: "Bearer {{accessToken}}"
   auth: inherit
 
 settings:

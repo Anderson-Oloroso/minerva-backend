@@ -14,6 +14,3 @@ export class GenreDTO {
         return list.map(item => new GenreDTO(item));
     }
 }
-
-export const CreateGenreDto = GenreDTO;
-export default GenreDTO;

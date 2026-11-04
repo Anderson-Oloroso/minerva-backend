@@ -1,4 +1,3 @@
-DROP DATABASE IF EXISTS minerva_lib_db;
 CREATE DATABASE IF NOT EXISTS minerva_lib_db;
 
 USE minerva_lib_db;
@@ -35,25 +34,26 @@ CREATE TABLE IF NOT EXISTS books(
     FOREIGN KEY (id_genre) REFERENCES genres(id_genre) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
-CREATE TABLE clients (
-    id_client INT PRIMARY KEY AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS users (
+    id_user INT PRIMARY KEY AUTO_INCREMENT,
     dpi VARCHAR(13) NOT NULL CHECK (CHAR_LENGTH(dpi) = 13),
-    name_client VARCHAR(50) NOT NULL,
+    name_user VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
     phone VARCHAR(8) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL, 
-    role ENUM('client', 'admin') DEFAULT 'client' NOT NULL 
+    role ENUM('user', 'admin') DEFAULT 'user' NOT NULL,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE
 );
 
 CREATE TABLE IF NOT EXISTS loans(
     id_loan INT PRIMARY KEY AUTO_INCREMENT,
-    id_client INT NOT NULL, 
+    id_user INT NOT NULL,
     date_loan TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     expected_return_date TIMESTAMP NOT NULL,
-    return_date TIMESTAMP NULL DEFAULT NULL,
+    return_date TIMESTAMP NULL, 
     state_loan ENUM('activo', 'devuelto') DEFAULT 'activo',
-    FOREIGN KEY (id_client) REFERENCES clients(id_client)
+    FOREIGN KEY (id_user) REFERENCES users(id_user)
 );
 
 CREATE TABLE IF NOT EXISTS loan_details(
@@ -61,17 +61,17 @@ CREATE TABLE IF NOT EXISTS loan_details(
     id_loan INT NOT NULL,
     id_book INT NOT NULL,
     state_book_out ENUM('Excelente', 'Regular', 'Maltratado') NOT NULL,
-    state_book_in ENUM('Excelente', 'Regular', 'Maltratado') NULL DEFAULT NULL,
+    state_book_in ENUM('Excelente', 'Regular', 'Maltratado') NULL, 
     FOREIGN KEY (id_loan) REFERENCES loans(id_loan) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (id_book) REFERENCES books(id_book) ON UPDATE CASCADE ON DELETE CASCADE
 );  
 
 CREATE TABLE IF NOT EXISTS sales(
     id_sale INT PRIMARY KEY AUTO_INCREMENT,
-    id_client INT NOT NULL,
+    id_user INT NOT NULL,
     date_sale TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     total DECIMAL(6,2) NOT NULL,
-    FOREIGN KEY (id_client) REFERENCES clients(id_client) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (id_user) REFERENCES users(id_user) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS sale_details(

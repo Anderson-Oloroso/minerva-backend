@@ -10,7 +10,7 @@ export class TokenService {
             jwtSecret,
             {
                 algorithm: 'HS256',
-                subject: String(user.id),
+                subject: String(user.id_user),
                 expiresIn: jwtExpiresIn
             }
         );
@@ -26,5 +26,3 @@ export class TokenService {
         };
     }
 }
-
-export default TokenService;

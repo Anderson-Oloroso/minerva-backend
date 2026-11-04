@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import Database from '../config/database.config.js';
-import AuthorModel from '../models/author.model.js';
-import AuthorService from '../services/author.service.js';
-import AuthorController from '../controllers/author.controller.js';
-import AuthMiddleware from '../middlewares/auth.middleware.js';
+import { Database } from '../config/database.config.js';
+import { AuthorModel } from '../models/author.model.js';
+import { AuthorService } from '../services/author.service.js';
+import { AuthorController } from '../controllers/author.controller.js';
+import { AuthMiddleware } from '../middlewares/auth.middleware.js';
 import { validationMiddleware } from '../middlewares/validation.middleware.js';
 import { createAuthorValidator, updateAuthorValidator, authorIdParamValidator } from '../validators/author.validator.js';
 

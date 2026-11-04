@@ -83,5 +83,3 @@ export class GenreController {
         }
     }
 }
-
-export default GenreController;

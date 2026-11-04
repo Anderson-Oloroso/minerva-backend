@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import Database from '../config/database.config.js';
-import PublisherModel from '../models/publisher.model.js';
-import PublisherService from '../services/publisher.service.js';
-import PublisherController from '../controllers/publisher.controller.js';
-import AuthMiddleware from '../middlewares/auth.middleware.js';
+import { Database } from '../config/database.config.js';
+import { PublisherModel } from '../models/publisher.model.js';
+import { PublisherService } from '../services/publisher.service.js';
+import { PublisherController } from '../controllers/publisher.controller.js';
+import { AuthMiddleware } from '../middlewares/auth.middleware.js';
 import { validationMiddleware } from '../middlewares/validation.middleware.js';
 import { createPublisherValidator, updatePublisherValidator, publisherIdParamValidator } from '../validators/publisher.validator.js';
 

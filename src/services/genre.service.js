@@ -1,5 +1,5 @@
 import { NotFoundError } from '../utils/errors.js';
-import GenreDTO from '../dtos/genre.dto.js';
+import { GenreDTO } from '../dtos/genre.dto.js';
 
 export class GenreService {
     constructor(genreModel) {
@@ -41,5 +41,3 @@ export class GenreService {
         return true;
     }
 }
-
-export default GenreService;

@@ -1,9 +1,9 @@
 import passport from 'passport';
 import { ExtractJwt, Strategy as JwtStrategy } from 'passport-jwt';
 import jwtSecret from './jwt.config.js';
-import Database from './database.config.js';
-import UserModel from '../models/user.model.js';
-import UserDTO from '../dtos/user.dto.js';
+import { Database } from './database.config.js';
+import { UserModel } from '../models/user.model.js';
+import { UserDTO } from '../dtos/user.dto.js';
 
 const userModel = new UserModel(Database.getPool());
 
@@ -17,7 +17,7 @@ passport.use(new JwtStrategy({
             return done(null, false);
         }
 
-        const user = await userModel.findById(payload.sub);
+        const user = await userModel.findActiveById(payload.sub);
         if (!user) {
             return done(null, false);
         }

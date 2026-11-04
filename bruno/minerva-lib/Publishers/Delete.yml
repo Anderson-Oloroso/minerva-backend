@@ -6,9 +6,6 @@ info:
 http:
   method: DELETE
   url: "{{baseUrl}}/publishers/7"
-  headers:
-    - name: Authorization
-      value: "Bearer {{accessToken}}"
   auth: inherit
 
 settings:

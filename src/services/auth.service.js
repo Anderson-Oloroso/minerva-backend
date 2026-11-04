@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import UserDTO from '../dtos/user.dto.js';
+import { UserDTO } from '../dtos/user.dto.js';
 
 export class AuthService {
     constructor(userModel) {
@@ -9,11 +9,11 @@ export class AuthService {
     async register(data) {
         const salt = 10;
         const hashedPssw = await bcrypt.hash(data.password, salt);
-        const defaultRole = 'client';
+        const defaultRole = 'user';
 
         const user = await this.userModel.create({
-            doc: data.dpi,
-            name: data.name,
+            dpi: data.dpi,
+            name_user: data.name,
             last_name: data.last_name,
             phone: data.phone,
             email: data.email,
@@ -38,10 +38,4 @@ export class AuthService {
         return UserDTO.from(user);
     }
 
-    async getProfile(userId) {
-        const user = await this.userModel.findById(userId);
-        return UserDTO.from(user);
-    }
 }
-
-export default AuthService;

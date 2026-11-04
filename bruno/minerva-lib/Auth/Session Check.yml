@@ -6,9 +6,6 @@ info:
 http:
   method: GET
   url: "{{baseUrl}}/auth/profile"
-  headers:
-    - name: Authorization
-      value: "Bearer {{accessToken}}"
   auth: inherit
 
 settings:
