@@ -13,6 +13,8 @@ export class SaleDTO {
         this.id_user = data.id_user !== undefined ? Number(data.id_user) : undefined;
         this.date_sale = data.date_sale;
         this.total = data.total !== undefined ? Number(data.total) : undefined;
+        this.state_sale = data.state_sale;
+        this.user_name = data.user_name ?? undefined;
         this.details = Array.isArray(data.details)
             ? data.details.map(detail => new SaleDetailDTO(detail))
             : undefined;

@@ -137,10 +137,10 @@ ejemplo, `1.2.3` requiere `/api/v1`. Al cambiar el major, actualiza `API_PREFIX`
 | --- | --- | --- |
 | Salud | `GET /health` | Público |
 | Autenticación | `POST /auth/register`, `POST /auth/login`, `POST /auth/logout` | Público |
-| Perfil y usuarios | `/users` y `/users/me` | Autenticación; administración para gestión de usuarios |
+| Perfil y usuarios | `/users` y `/users/me` | Autenticación; administración para gestión y reactivación de usuarios |
 | Libros, autores, editoriales y géneros | `/books`, `/authors`, `/publishers`, `/genres` | Consulta pública; cambios para administrador |
-| Préstamos | `POST /loans`, `PUT /loans/:id/return` | Usuario autenticado |
-| Ventas | `POST /sales` | Usuario autenticado |
+| Préstamos | `GET /loans`, `GET /loans/me`, `POST /loans`, `PUT /loans/:id/approve`, `PUT /loans/:id/reject`, `PUT /loans/:id/return-request`, `PUT /loans/:id/return` | Usuario: solicita préstamo/devolución y ve su historial; admin: revisa solicitudes, registra entrega/devolución y ve todo el historial |
+| Compras | `GET /sales`, `GET /sales/me`, `POST /sales`, `PUT /sales/:id/confirm`, `PUT /sales/:id/reject` | Usuario: solicita compra y ve su historial; admin: verifica pago, confirma/rechaza y ve todo el historial |
 
 Las rutas de la tabla son relativas al prefijo: por ejemplo, `GET /api/v1/books`. Las cuentas
 se desactivan sin borrar su historial. Consulta [database/README.md](./database/README.md)

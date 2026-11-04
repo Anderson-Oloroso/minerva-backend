@@ -1,4 +1,8 @@
-CREATE DATABASE IF NOT EXISTS minerva_lib_db;
+SET NAMES utf8mb4;
+
+CREATE DATABASE IF NOT EXISTS minerva_lib_db
+    CHARACTER SET utf8mb4
+    COLLATE utf8mb4_unicode_ci;
 
 USE minerva_lib_db;
 
@@ -21,6 +25,7 @@ CREATE TABLE IF NOT EXISTS books(
     id_book INT PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(50) NOT NULL,
     isbn VARCHAR(20) NOT NULL,
+    image_url VARCHAR(2048) NULL,
     year_publication SMALLINT UNSIGNED NOT NULL,
     no_pages INT NOT NULL,
     wrote_language VARCHAR(50) NOT NULL,
@@ -52,7 +57,7 @@ CREATE TABLE IF NOT EXISTS loans(
     date_loan TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     expected_return_date TIMESTAMP NOT NULL,
     return_date TIMESTAMP NULL, 
-    state_loan ENUM('activo', 'devuelto') DEFAULT 'activo',
+    state_loan ENUM('pendiente', 'activo', 'devolucion_solicitada', 'devuelto', 'rechazado') DEFAULT 'pendiente',
     FOREIGN KEY (id_user) REFERENCES users(id_user)
 );
 
@@ -71,6 +76,7 @@ CREATE TABLE IF NOT EXISTS sales(
     id_user INT NOT NULL,
     date_sale TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     total DECIMAL(6,2) NOT NULL,
+    state_sale ENUM('pendiente_pago', 'confirmada', 'rechazada') DEFAULT 'pendiente_pago',
     FOREIGN KEY (id_user) REFERENCES users(id_user) ON UPDATE CASCADE ON DELETE CASCADE
 );
 

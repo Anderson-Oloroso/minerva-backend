@@ -1,4 +1,4 @@
-import { body } from 'express-validator';
+import { body, param } from 'express-validator';
 
 const isPositiveDatabaseInteger = value =>
     Number.isSafeInteger(value) && value > 0 && value <= 2147483647;
@@ -17,4 +17,10 @@ export const createSaleValidator = [
         .withMessage('Cada detalle debe incluir id_book y amount como enteros positivos')
 ];
 
-export default { createSaleValidator };
+export const saleIdParamValidator = [
+    param('id')
+        .isInt({ min: 1, max: 2147483647 })
+        .withMessage('El ID de la venta debe ser un entero positivo')
+];
+
+export default { createSaleValidator, saleIdParamValidator };

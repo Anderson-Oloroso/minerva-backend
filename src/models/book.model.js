@@ -4,7 +4,7 @@ export class BookModel {
     }
 
     async findAll() {
-        const query = `SELECT B.id_book AS id, B.title, B.isbn, B.year_publication, B.no_pages, B.wrote_language,
+        const query = `SELECT B.id_book AS id, B.title, B.isbn, B.image_url, B.year_publication, B.no_pages, B.wrote_language,
             B.price, B.stock, B.id_genre, B.id_publisher, B.id_author,
             G.name_genre, P.name_publisher, A.name_author
             FROM books B
@@ -17,7 +17,7 @@ export class BookModel {
     }
 
     async findById(id) {
-        const query = `SELECT B.id_book AS id, B.title, B.isbn, B.year_publication, B.no_pages, B.wrote_language,
+        const query = `SELECT B.id_book AS id, B.title, B.isbn, B.image_url, B.year_publication, B.no_pages, B.wrote_language,
             B.price, B.stock, B.id_genre, B.id_publisher, B.id_author,
             G.name_genre, P.name_publisher, A.name_author
             FROM books B
@@ -30,11 +30,12 @@ export class BookModel {
     }
 
     async create(data) {
-        const query = `INSERT INTO books (title, isbn, year_publication, no_pages, wrote_language, price, stock, id_genre, id_publisher, id_author)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        const query = `INSERT INTO books (title, isbn, image_url, year_publication, no_pages, wrote_language, price, stock, id_genre, id_publisher, id_author)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
         const [result] = await this.pool.query(query, [
             data.title,
             data.isbn,
+            data.image_url || null,
             data.year_publication,
             data.no_pages,
             data.wrote_language,
@@ -51,6 +52,7 @@ export class BookModel {
         const query = `UPDATE books SET
             title = IFNULL(?, title),
             isbn = IFNULL(?, isbn),
+            image_url = CASE WHEN ? = '' THEN NULL ELSE IFNULL(?, image_url) END,
             year_publication = IFNULL(?, year_publication),
             no_pages = IFNULL(?, no_pages),
             wrote_language = IFNULL(?, wrote_language),
@@ -63,6 +65,8 @@ export class BookModel {
         await this.pool.query(query, [
             data.title ?? null,
             data.isbn ?? null,
+            data.image_url ?? null,
+            data.image_url ?? null,
             data.year_publication ?? null,
             data.no_pages ?? null,
             data.wrote_language ?? null,

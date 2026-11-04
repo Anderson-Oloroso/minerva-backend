@@ -3,6 +3,7 @@ export class BookDTO {
         this.id = data.id !== undefined ? Number(data.id) : undefined;
         this.title = data.title ?? '';
         this.isbn = data.isbn ?? '';
+        this.image_url = data.image_url ?? null;
         this.year_publication = data.year_publication ?? '';
         this.no_pages = data.no_pages ?? '';
         this.wrote_language = data.wrote_language ?? '';
