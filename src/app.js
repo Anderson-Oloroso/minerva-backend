@@ -43,7 +43,7 @@ export class App {
         this.app.get(healthPath, (req, res) => {
             res.status(200).json({
                 status: 'ok',
-                message: 'Minerva Lib API funcionando correctamente',
+                message: 'Minerva Lib API funcionando correctamente. URL de producción: https://minerva-backend-gja1.onrender.com',
                 timestamp: new Date().toISOString()
             });
         });

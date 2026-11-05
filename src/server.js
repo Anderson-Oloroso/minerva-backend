@@ -36,8 +36,8 @@ export class Server {
 
     listen() {
         this.#serverInstance = this.#app.listen(this.#port, () => {
-            console.log(`Servidor Minerva Lib corriendo en http://localhost:${this.#port}`);
-            console.log(`Health Check disponible en http://localhost:${this.#port}${apiPrefix === '/' ? '' : apiPrefix}/health`);
+            console.log('Servidor Minerva Lib corriendo en https://minerva-backend-gja1.onrender.com');
+            console.log(`Health Check disponible en https://minerva-backend-gja1.onrender.com${apiPrefix === '/' ? '' : apiPrefix}/health`);
         });
         return this.#serverInstance;
     }
