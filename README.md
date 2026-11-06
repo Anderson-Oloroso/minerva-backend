@@ -31,6 +31,14 @@ manteniendo el inventario y el historial de operaciones.
 | express-validator | Validación de parámetros y cuerpos de solicitudes. |
 | Bruno | Colección de solicitudes para explorar y probar la API. |
 
+## Despliegue
+
+Minerva Lib está desplegada con **Aiven** para la base de datos MySQL, **Render** para la API
+backend y **Netlify** para la aplicación frontend.
+
+- **Aplicación:** [minerva-lib.netlify.app](https://minerva-lib.netlify.app/)
+- **Repositorio frontend:** [Anderson-Oloroso/minerva-lib](https://github.com/Anderson-Oloroso/minerva-lib)
+
 ## Modelo de base de datos
 
 El diagrama muestra las entidades principales y sus relaciones en MySQL.
